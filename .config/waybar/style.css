@@ -1,0 +1,75 @@
+* {
+  font-family: "Noto Sans", sans-serif;
+  font-size: 13px;
+  min-height: 0;
+}
+
+window#waybar {
+  background: rgba(24, 24, 37, 0.96);
+  color: #cdd6f4;
+}
+
+#workspaces button {
+  color: #cdd6f4;
+  padding: 0 6px;
+  border-radius: 6px;
+}
+
+#workspaces button.active {
+  background: #45475a;
+  color: #89b4fa;
+}
+
+.workspace-button {
+  padding: 0 9px;
+  margin: 4px 0;
+  border-radius: 6px;
+  color: #cdd6f4;
+}
+
+.workspace-button:hover {
+  background: #313244;
+}
+
+.workspace-button.active {
+  background: #45475a;
+  color: #89b4fa;
+}
+
+#clock, #network, #bluetooth, #battery, #custom-notifications, #tray,
+#custom-media, #cpu, #memory, #wireplumber, #backlight {
+  padding: 0 6px;
+  margin: 4px 0;
+  border-radius: 6px;
+  background: #313244;
+}
+
+#network.disconnected, #battery.warning {
+  color: #f9e2af;
+}
+
+#battery.critical:not(.charging) {
+  background: #f38ba8;
+  color: #181825;
+}
+
+#battery.charging {
+  color: #a6e3a1;
+}
+
+#tray {
+  margin-right: 8px;
+}
+
+#custom-power {
+  color: #f38ba8;
+  background: #313244;
+  font-size: 18px;
+  padding: 0 10px;
+  margin: 4px 8px 4px 0;
+  border-radius: 6px;
+}
+
+#custom-power:hover {
+  background: #45475a;
+}

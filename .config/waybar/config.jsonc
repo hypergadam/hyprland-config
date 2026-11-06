@@ -1,0 +1,280 @@
+[
+  {
+    "layer": "top",
+    "position": "top",
+    "height": 36,
+    "spacing": 4,
+    "modules-left": [
+      "custom/workspace1",
+      "custom/workspace2",
+      "custom/workspace3",
+      "custom/workspace4",
+      "custom/workspace5",
+      "custom/media"
+    ],
+    "modules-center": [
+      "clock"
+    ],
+    "modules-right": [
+      "backlight",
+      "cpu",
+      "memory",
+      "wireplumber",
+      "network",
+      "bluetooth",
+      "battery",
+      "custom/notifications",
+      "tray",
+      "custom/power"
+    ],
+    "custom/media": {
+      "format": "Play/Pause",
+      "tooltip-format": "Click: play/pause \u00b7 Right-click: next track \u00b7 Middle-click: previous track",
+      "on-click": "playerctl play-pause",
+      "on-click-right": "playerctl next",
+      "on-click-middle": "playerctl previous"
+    },
+    "cpu": {
+      "interval": 3,
+      "format": "CPU {usage}%"
+    },
+    "memory": {
+      "interval": 5,
+      "format": "RAM {percentage}%",
+      "tooltip-format": "{used:.1f} / {total:.1f} GiB used"
+    },
+    "wireplumber": {
+      "format": "Vol {volume}%",
+      "format-muted": "Muted",
+      "scroll-step": 5,
+      "max-volume": 100,
+      "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+      "on-click-right": "kcmshell6 kcm_pulseaudio",
+      "tooltip-format": "{node_name}\nScroll: volume \u00b7 Click: mute \u00b7 Right-click: sound settings"
+    },
+    "clock": {
+      "format": "{:%a %d %b  %H:%M}",
+      "tooltip-format": "{:%A, %d %B %Y}"
+    },
+    "network": {
+      "format-wifi": "Wi-Fi {essid} {signalStrength}%",
+      "format-ethernet": "Ethernet",
+      "format-linked": "Network: no IP",
+      "format-disconnected": "Offline",
+      "tooltip-format": "{ifname}: {ipaddr}\nClick to edit connections; use the tray icon to join Wi-Fi.",
+      "on-click": "nm-connection-editor",
+      "max-length": 18
+    },
+    "bluetooth": {
+      "format": "Bluetooth {status}",
+      "format-connected": "Bluetooth {num_connections} connected",
+      "format-disabled": "Bluetooth off",
+      "on-click": "blueman-manager"
+    },
+    "battery": {
+      "bat": "BAT0",
+      "interval": 30,
+      "states": {
+        "warning": 25,
+        "critical": 10
+      },
+      "format": "Battery {capacity}%",
+      "format-charging": "Charging {capacity}%",
+      "format-full": "Battery full",
+      "tooltip-format": "{capacity}% \u00b7 {timeTo}"
+    },
+    "custom/notifications": {
+      "format": "Notifications",
+      "tooltip-format": "Click to open notifications \u00b7 Super+N",
+      "on-click": "swaync-client -t"
+    },
+    "tray": {
+      "icon-size": 18,
+      "spacing": 10
+    },
+    "output": "HDMI-A-1",
+    "custom/workspace1": {
+      "exec": "cat \"${XDG_STATE_HOME:-$HOME/.local/state}/hypr-panel/workspaces/1.json\" 2>/dev/null || printf '%s\\n' '{\"text\": \"1\", \"class\": [\"workspace-button\"]}'",
+      "return-type": "json",
+      "signal": 8,
+      "on-click": "hyprctl eval 'hl.dispatch(hl.dsp.focus({ workspace = \"1\" }))'"
+    },
+    "custom/workspace2": {
+      "exec": "cat \"${XDG_STATE_HOME:-$HOME/.local/state}/hypr-panel/workspaces/2.json\" 2>/dev/null || printf '%s\\n' '{\"text\": \"2\", \"class\": [\"workspace-button\"]}'",
+      "return-type": "json",
+      "signal": 8,
+      "on-click": "hyprctl eval 'hl.dispatch(hl.dsp.focus({ workspace = \"2\" }))'"
+    },
+    "custom/workspace3": {
+      "exec": "cat \"${XDG_STATE_HOME:-$HOME/.local/state}/hypr-panel/workspaces/3.json\" 2>/dev/null || printf '%s\\n' '{\"text\": \"3\", \"class\": [\"workspace-button\"]}'",
+      "return-type": "json",
+      "signal": 8,
+      "on-click": "hyprctl eval 'hl.dispatch(hl.dsp.focus({ workspace = \"3\" }))'"
+    },
+    "custom/workspace4": {
+      "exec": "cat \"${XDG_STATE_HOME:-$HOME/.local/state}/hypr-panel/workspaces/4.json\" 2>/dev/null || printf '%s\\n' '{\"text\": \"4\", \"class\": [\"workspace-button\"]}'",
+      "return-type": "json",
+      "signal": 8,
+      "on-click": "hyprctl eval 'hl.dispatch(hl.dsp.focus({ workspace = \"4\" }))'"
+    },
+    "custom/workspace5": {
+      "exec": "cat \"${XDG_STATE_HOME:-$HOME/.local/state}/hypr-panel/workspaces/5.json\" 2>/dev/null || printf '%s\\n' '{\"text\": \"5\", \"class\": [\"workspace-button\"]}'",
+      "return-type": "json",
+      "signal": 8,
+      "on-click": "hyprctl eval 'hl.dispatch(hl.dsp.focus({ workspace = \"5\" }))'"
+    },
+    "custom/power": {
+      "format": "\u23fb",
+      "tooltip-format": "Power: sleep, restart, or shut down",
+      "on-click": "sh ~/.config/hypr/power-menu.sh"
+    },
+    "backlight": {
+      "device": "amdgpu_bl1",
+      "format": "Bright {percent}%",
+      "tooltip-format": "Laptop screen brightness: {percent}%\nLeft-click / scroll up: brighter (+5%)\nRight-click / scroll down: dimmer (-5%)",
+      "on-scroll-up": "brightnessctl -d amdgpu_bl1 set +5%",
+      "on-scroll-down": "brightnessctl -d amdgpu_bl1 --min-value=3277 set 5%-",
+      "on-click": "brightnessctl -d amdgpu_bl1 set +5%",
+      "on-click-right": "brightnessctl -d amdgpu_bl1 --min-value=3277 set 5%-"
+    }
+  },
+  {
+    "layer": "top",
+    "position": "top",
+    "height": 36,
+    "spacing": 4,
+    "modules-left": [
+      "custom/workspace6",
+      "custom/workspace7",
+      "custom/workspace8",
+      "custom/workspace9",
+      "custom/workspace10",
+      "custom/media"
+    ],
+    "modules-center": [
+      "clock"
+    ],
+    "modules-right": [
+      "backlight",
+      "cpu",
+      "memory",
+      "wireplumber",
+      "network",
+      "bluetooth",
+      "battery",
+      "custom/notifications",
+      "tray",
+      "custom/power"
+    ],
+    "custom/media": {
+      "format": "Play/Pause",
+      "tooltip-format": "Click: play/pause \u00b7 Right-click: next track \u00b7 Middle-click: previous track",
+      "on-click": "playerctl play-pause",
+      "on-click-right": "playerctl next",
+      "on-click-middle": "playerctl previous"
+    },
+    "cpu": {
+      "interval": 3,
+      "format": "CPU {usage}%"
+    },
+    "memory": {
+      "interval": 5,
+      "format": "RAM {percentage}%",
+      "tooltip-format": "{used:.1f} / {total:.1f} GiB used"
+    },
+    "wireplumber": {
+      "format": "Vol {volume}%",
+      "format-muted": "Muted",
+      "scroll-step": 5,
+      "max-volume": 100,
+      "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+      "on-click-right": "kcmshell6 kcm_pulseaudio",
+      "tooltip-format": "{node_name}\nScroll: volume \u00b7 Click: mute \u00b7 Right-click: sound settings"
+    },
+    "clock": {
+      "format": "{:%a %d %b  %H:%M}",
+      "tooltip-format": "{:%A, %d %B %Y}"
+    },
+    "network": {
+      "format-wifi": "Wi-Fi {essid} {signalStrength}%",
+      "format-ethernet": "Ethernet",
+      "format-linked": "Network: no IP",
+      "format-disconnected": "Offline",
+      "tooltip-format": "{ifname}: {ipaddr}\nClick to edit connections; use the tray icon to join Wi-Fi.",
+      "on-click": "nm-connection-editor",
+      "max-length": 18
+    },
+    "bluetooth": {
+      "format": "Bluetooth {status}",
+      "format-connected": "Bluetooth {num_connections} connected",
+      "format-disabled": "Bluetooth off",
+      "on-click": "blueman-manager"
+    },
+    "battery": {
+      "bat": "BAT0",
+      "interval": 30,
+      "states": {
+        "warning": 25,
+        "critical": 10
+      },
+      "format": "Battery {capacity}%",
+      "format-charging": "Charging {capacity}%",
+      "format-full": "Battery full",
+      "tooltip-format": "{capacity}% \u00b7 {timeTo}"
+    },
+    "custom/notifications": {
+      "format": "Notifications",
+      "tooltip-format": "Click to open notifications \u00b7 Super+N",
+      "on-click": "swaync-client -t"
+    },
+    "tray": {
+      "icon-size": 18,
+      "spacing": 10
+    },
+    "output": "eDP-1",
+    "custom/workspace6": {
+      "exec": "cat \"${XDG_STATE_HOME:-$HOME/.local/state}/hypr-panel/workspaces/6.json\" 2>/dev/null || printf '%s\\n' '{\"text\": \"6\", \"class\": [\"workspace-button\"]}'",
+      "return-type": "json",
+      "signal": 8,
+      "on-click": "hyprctl eval 'hl.dispatch(hl.dsp.focus({ workspace = \"6\" }))'"
+    },
+    "custom/workspace7": {
+      "exec": "cat \"${XDG_STATE_HOME:-$HOME/.local/state}/hypr-panel/workspaces/7.json\" 2>/dev/null || printf '%s\\n' '{\"text\": \"7\", \"class\": [\"workspace-button\"]}'",
+      "return-type": "json",
+      "signal": 8,
+      "on-click": "hyprctl eval 'hl.dispatch(hl.dsp.focus({ workspace = \"7\" }))'"
+    },
+    "custom/workspace8": {
+      "exec": "cat \"${XDG_STATE_HOME:-$HOME/.local/state}/hypr-panel/workspaces/8.json\" 2>/dev/null || printf '%s\\n' '{\"text\": \"8\", \"class\": [\"workspace-button\"]}'",
+      "return-type": "json",
+      "signal": 8,
+      "on-click": "hyprctl eval 'hl.dispatch(hl.dsp.focus({ workspace = \"8\" }))'"
+    },
+    "custom/workspace9": {
+      "exec": "cat \"${XDG_STATE_HOME:-$HOME/.local/state}/hypr-panel/workspaces/9.json\" 2>/dev/null || printf '%s\\n' '{\"text\": \"9\", \"class\": [\"workspace-button\"]}'",
+      "return-type": "json",
+      "signal": 8,
+      "on-click": "hyprctl eval 'hl.dispatch(hl.dsp.focus({ workspace = \"9\" }))'"
+    },
+    "custom/workspace10": {
+      "exec": "cat \"${XDG_STATE_HOME:-$HOME/.local/state}/hypr-panel/workspaces/10.json\" 2>/dev/null || printf '%s\\n' '{\"text\": \"10\", \"class\": [\"workspace-button\"]}'",
+      "return-type": "json",
+      "signal": 8,
+      "on-click": "hyprctl eval 'hl.dispatch(hl.dsp.focus({ workspace = \"10\" }))'"
+    },
+    "custom/power": {
+      "format": "\u23fb",
+      "tooltip-format": "Power: sleep, restart, or shut down",
+      "on-click": "sh ~/.config/hypr/power-menu.sh"
+    },
+    "backlight": {
+      "device": "amdgpu_bl1",
+      "format": "Bright {percent}%",
+      "tooltip-format": "Laptop screen brightness: {percent}%\nLeft-click / scroll up: brighter (+5%)\nRight-click / scroll down: dimmer (-5%)",
+      "on-scroll-up": "brightnessctl -d amdgpu_bl1 set +5%",
+      "on-scroll-down": "brightnessctl -d amdgpu_bl1 --min-value=3277 set 5%-",
+      "on-click": "brightnessctl -d amdgpu_bl1 set +5%",
+      "on-click-right": "brightnessctl -d amdgpu_bl1 --min-value=3277 set 5%-"
+    }
+  }
+]
