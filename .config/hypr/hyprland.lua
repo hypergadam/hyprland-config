@@ -366,6 +366,20 @@ hl.window_rule({
     float = true,
 })
 
+-- Apidog's file picker can retain an external-display size on the laptop.
+-- Keep modal dialogs on the AOC when present and fit either screen's scale.
+local apidogDialogRule = {
+    name = "apidog-dialogs",
+    match = { class = "^[Aa]pidog$", modal = true },
+    float = true,
+    center = true,
+    size = { "monitor_w * 0.8", "monitor_h * 0.75" },
+}
+if hl.get_monitor("HDMI-A-1") then
+    apidogDialogRule.monitor = "HDMI-A-1"
+end
+hl.window_rule(apidogDialogRule)
+
 local suppressMaximizeRule = hl.window_rule({
     -- Ignore maximize requests from all apps. You'll probably like this.
     name  = "suppress-maximize-events",

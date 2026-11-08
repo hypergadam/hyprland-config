@@ -70,6 +70,9 @@ Its helper, `.config/hypr/launch-apidog.sh`, runs Apidog and its GTK file choose
 on native Wayland so they avoid XWayland blur when moving between the 100%
 external display and the 150% laptop display. Quit and reopen Apidog from the
 launcher after installing this change; existing processes retain their backend.
+Apidog modal dialogs (including its file picker) float, center, and use 80% of
+the monitor width and 75% of its height. When the AOC (`HDMI-A-1`) is connected
+at config load, they open there. Otherwise they fit the selected display.
 
 ## Connections
 
