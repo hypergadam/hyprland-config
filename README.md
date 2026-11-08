@@ -16,6 +16,8 @@ git diff
 `sync.sh` copies the selected files from `${XDG_CONFIG_HOME:-$HOME/.config}`
 into this folder. It overwrites the saved copies; it does not install files,
 commit, or push. Backups, logs, and generated workspace state are excluded.
+It also copies the Apidog application launcher from
+`${XDG_DATA_HOME:-$HOME/.local/share}/applications/apidog.desktop`.
 Future assistant changes to these live files should also run this command.
 
 ## Programs used
@@ -32,6 +34,7 @@ Future assistant changes to these live files should also run this command.
 - `grim`, `slurp`, `wl-copy`, `notify-send`, `xdg-user-dir`
 - Noto Sans and Symbols Nerd Font Mono fonts (Waybar icons)
 - Optional: `hyprshutdown`
+- Optional: Apidog AppImage at `~/.local/bin/Apidog.AppImage`
 
 ## Hardware settings
 
@@ -60,6 +63,13 @@ Install the required programs, back up the corresponding existing files under
 `~/.config/`, then copy the contents of this repository's `.config/` there.
 Review the monitor, battery, and backlight settings before reloading Hyprland
 and Waybar. This configuration uses Hyprland's Lua API.
+
+The Apidog launcher is saved separately under `.local/share/applications/`.
+When restoring it for a different user, update its absolute Exec and Icon paths.
+Its helper, `.config/hypr/launch-apidog.sh`, runs Apidog and its GTK file chooser
+on native Wayland so they avoid XWayland blur when moving between the 100%
+external display and the 150% laptop display. Quit and reopen Apidog from the
+launcher after installing this change; existing processes retain their backend.
 
 ## Connections
 

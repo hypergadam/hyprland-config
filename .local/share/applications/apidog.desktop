@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Apidog
+Comment=API Design, Debugging, Automated Testing
+Exec=/home/hypergadam/.config/hypr/launch-apidog.sh
+Icon=/home/hypergadam/.local/share/icons/apidog.png
+Terminal=false
+Type=Application
+Categories=Development;
+StartupNotify=true
