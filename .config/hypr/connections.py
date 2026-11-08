@@ -135,7 +135,9 @@ class Connections(Adw.Application):
         outer.append(scroll)
         self.window.set_content(outer)
         self.client.connect('notify', lambda *_: self.render())
-        GLib.timeout_add_seconds(5, self.render)
+        for device in self.client.get_devices():
+            if isinstance(device, NM.DeviceWifi):
+                device.connect('notify::last-scan', lambda *_: self.render())
         self.render()
         self.window.present()
         self.scan()
@@ -192,7 +194,7 @@ class Connections(Adw.Application):
         def done(device, result, *_):
             try:
                 device.request_scan_finish(result)
-                self.status.set_label('Networks refresh automatically every 5 seconds.')
+                self.status.set_label('Use Refresh to update nearby networks.')
             except GLib.Error as exc:
                 self.status.set_label(exc.message)
             self.refresh_button.set_sensitive(True)

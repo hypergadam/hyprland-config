@@ -70,6 +70,9 @@ or choose Advanced for the NetworkManager connection editor.
 The manager shows nearby Wi-Fi with band, signal strength and weak-signal
 warnings, plus saved Wi-Fi, Ethernet and VPN connections.
 Active connections appear first under Current connections, with a Settings button.
+There is no periodic refresh timer. Use Refresh for a new scan; connection and
+scan-completion events update the display. Automatic connection settings remain
+controlled by NetworkManager.
 Connect, disconnect, toggle Wi-Fi, and use the switch beside a saved connection to change automatic
 connection. Its menu provides settings, password entry and a confirmed Forget
 action. Passwords are passed to NetworkManager through standard input, never
