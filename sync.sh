@@ -7,8 +7,10 @@ set -- \
     hypr/hyprland.lua \
     hypr/hyprlock.conf \
     hypr/start-panel.sh \
+    hypr/connections.py \
     hypr/power-menu.sh \
     hypr/screenshot.sh \
+    hypr/wallpapers/orbital-ring.png \
     waybar/config.jsonc \
     waybar/style.css \
     waybar/workspace-status.py \
@@ -25,4 +27,4 @@ do
     mkdir -p "$repo_dir/.config/$(dirname -- "$relative")"
     cp -p -- "$config_dir/$relative" "$repo_dir/.config/$relative"
 done
-printf 'Copied 9 current configuration files into %s\n' "$repo_dir"
+printf 'Copied %s current configuration files into %s\n' "$#" "$repo_dir"

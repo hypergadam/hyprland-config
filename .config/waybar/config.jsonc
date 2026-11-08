@@ -28,7 +28,7 @@
       "custom/power"
     ],
     "custom/media": {
-      "format": "Play/Pause",
+      "format": "  ",
       "tooltip-format": "Click: play/pause \u00b7 Right-click: next track \u00b7 Middle-click: previous track",
       "on-click": "playerctl play-pause",
       "on-click-right": "playerctl next",
@@ -36,16 +36,18 @@
     },
     "cpu": {
       "interval": 3,
-      "format": "CPU {usage}%"
+      "format": "  {usage}%",
+      "tooltip-format": "CPU usage: {usage}%"
     },
     "memory": {
       "interval": 5,
-      "format": "RAM {percentage}%",
+      "format": "  {percentage}%",
       "tooltip-format": "{used:.1f} / {total:.1f} GiB used"
     },
     "wireplumber": {
-      "format": "Vol {volume}%",
-      "format-muted": "Muted",
+      "format": "{icon}  {volume}%",
+      "format-icons": ["", "", ""],
+      "format-muted": "  Muted",
       "scroll-step": 5,
       "max-volume": 100,
       "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
@@ -53,22 +55,26 @@
       "tooltip-format": "{node_name}\nScroll: volume \u00b7 Click: mute \u00b7 Right-click: sound settings"
     },
     "clock": {
-      "format": "{:%a %d %b  %H:%M}",
+      "format": "  {:%a %d %b  %H:%M}",
       "tooltip-format": "{:%A, %d %B %Y}"
     },
     "network": {
-      "format-wifi": "Wi-Fi {essid} {signalStrength}%",
-      "format-ethernet": "Ethernet",
-      "format-linked": "Network: no IP",
-      "format-disconnected": "Offline",
-      "tooltip-format": "{ifname}: {ipaddr}\nClick to edit connections; use the tray icon to join Wi-Fi.",
-      "on-click": "nm-connection-editor",
+      "format-wifi": "  {signalStrength}%",
+      "format-ethernet": "  Online",
+      "format-linked": "",
+      "format-disconnected": "",
+      "tooltip-format": "{essid}\n{ifname}: {ipaddr}\nClick: connection manager · Right-click: advanced settings",
+      "on-click": "python3 ~/.config/hypr/connections.py",
+      "on-click-right": "nm-connection-editor",
       "max-length": 18
     },
     "bluetooth": {
-      "format": "Bluetooth {status}",
-      "format-connected": "Bluetooth {num_connections} connected",
-      "format-disabled": "Bluetooth off",
+      "format": "",
+      "tooltip-format": "Bluetooth: {status}",
+      "format-connected": "  {num_connections}",
+      "tooltip-format-connected": "{device_enumerate}",
+      "format-disabled": "",
+      "format-off": "",
       "on-click": "blueman-manager"
     },
     "battery": {
@@ -78,13 +84,14 @@
         "warning": 25,
         "critical": 10
       },
-      "format": "Battery {capacity}%",
-      "format-charging": "Charging {capacity}%",
-      "format-full": "Battery full",
+      "format": "{icon}  {capacity}%",
+      "format-icons": ["", "", "", "", ""],
+      "format-charging": "  {capacity}%",
+      "format-full": "  {capacity}%",
       "tooltip-format": "{capacity}% \u00b7 {timeTo}"
     },
     "custom/notifications": {
-      "format": "Notifications",
+      "format": "",
       "tooltip-format": "Click to open notifications \u00b7 Super+N",
       "on-click": "swaync-client -t"
     },
@@ -124,13 +131,13 @@
       "on-click": "hyprctl eval 'hl.dispatch(hl.dsp.focus({ workspace = \"5\" }))'"
     },
     "custom/power": {
-      "format": "\u23fb",
+      "format": "",
       "tooltip-format": "Power: sleep, restart, or shut down",
       "on-click": "sh ~/.config/hypr/power-menu.sh"
     },
     "backlight": {
       "device": "amdgpu_bl1",
-      "format": "Bright {percent}%",
+      "format": "  {percent}%",
       "tooltip-format": "Laptop screen brightness: {percent}%\nLeft-click / scroll up: brighter (+5%)\nRight-click / scroll down: dimmer (-5%)",
       "on-scroll-up": "brightnessctl -d amdgpu_bl1 set +5%",
       "on-scroll-down": "brightnessctl -d amdgpu_bl1 --min-value=3277 set 5%-",
@@ -167,7 +174,7 @@
       "custom/power"
     ],
     "custom/media": {
-      "format": "Play/Pause",
+      "format": "  ",
       "tooltip-format": "Click: play/pause \u00b7 Right-click: next track \u00b7 Middle-click: previous track",
       "on-click": "playerctl play-pause",
       "on-click-right": "playerctl next",
@@ -175,16 +182,18 @@
     },
     "cpu": {
       "interval": 3,
-      "format": "CPU {usage}%"
+      "format": "  {usage}%",
+      "tooltip-format": "CPU usage: {usage}%"
     },
     "memory": {
       "interval": 5,
-      "format": "RAM {percentage}%",
+      "format": "  {percentage}%",
       "tooltip-format": "{used:.1f} / {total:.1f} GiB used"
     },
     "wireplumber": {
-      "format": "Vol {volume}%",
-      "format-muted": "Muted",
+      "format": "{icon}  {volume}%",
+      "format-icons": ["", "", ""],
+      "format-muted": "  Muted",
       "scroll-step": 5,
       "max-volume": 100,
       "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
@@ -192,22 +201,26 @@
       "tooltip-format": "{node_name}\nScroll: volume \u00b7 Click: mute \u00b7 Right-click: sound settings"
     },
     "clock": {
-      "format": "{:%a %d %b  %H:%M}",
+      "format": "  {:%a %d %b  %H:%M}",
       "tooltip-format": "{:%A, %d %B %Y}"
     },
     "network": {
-      "format-wifi": "Wi-Fi {essid} {signalStrength}%",
-      "format-ethernet": "Ethernet",
-      "format-linked": "Network: no IP",
-      "format-disconnected": "Offline",
-      "tooltip-format": "{ifname}: {ipaddr}\nClick to edit connections; use the tray icon to join Wi-Fi.",
-      "on-click": "nm-connection-editor",
+      "format-wifi": "  {signalStrength}%",
+      "format-ethernet": "  Online",
+      "format-linked": "",
+      "format-disconnected": "",
+      "tooltip-format": "{essid}\n{ifname}: {ipaddr}\nClick: connection manager · Right-click: advanced settings",
+      "on-click": "python3 ~/.config/hypr/connections.py",
+      "on-click-right": "nm-connection-editor",
       "max-length": 18
     },
     "bluetooth": {
-      "format": "Bluetooth {status}",
-      "format-connected": "Bluetooth {num_connections} connected",
-      "format-disabled": "Bluetooth off",
+      "format": "",
+      "tooltip-format": "Bluetooth: {status}",
+      "format-connected": "  {num_connections}",
+      "tooltip-format-connected": "{device_enumerate}",
+      "format-disabled": "",
+      "format-off": "",
       "on-click": "blueman-manager"
     },
     "battery": {
@@ -217,13 +230,14 @@
         "warning": 25,
         "critical": 10
       },
-      "format": "Battery {capacity}%",
-      "format-charging": "Charging {capacity}%",
-      "format-full": "Battery full",
+      "format": "{icon}  {capacity}%",
+      "format-icons": ["", "", "", "", ""],
+      "format-charging": "  {capacity}%",
+      "format-full": "  {capacity}%",
       "tooltip-format": "{capacity}% \u00b7 {timeTo}"
     },
     "custom/notifications": {
-      "format": "Notifications",
+      "format": "",
       "tooltip-format": "Click to open notifications \u00b7 Super+N",
       "on-click": "swaync-client -t"
     },
@@ -263,13 +277,13 @@
       "on-click": "hyprctl eval 'hl.dispatch(hl.dsp.focus({ workspace = \"10\" }))'"
     },
     "custom/power": {
-      "format": "\u23fb",
+      "format": "",
       "tooltip-format": "Power: sleep, restart, or shut down",
       "on-click": "sh ~/.config/hypr/power-menu.sh"
     },
     "backlight": {
       "device": "amdgpu_bl1",
-      "format": "Bright {percent}%",
+      "format": "  {percent}%",
       "tooltip-format": "Laptop screen brightness: {percent}%\nLeft-click / scroll up: brighter (+5%)\nRight-click / scroll down: dimmer (-5%)",
       "on-scroll-up": "brightnessctl -d amdgpu_bl1 set +5%",
       "on-scroll-down": "brightnessctl -d amdgpu_bl1 --min-value=3277 set 5%-",

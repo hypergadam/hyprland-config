@@ -119,8 +119,8 @@ hl.config({
         border_size = 2,
 
         col = {
-            active_border   = { colors = {"rgba(33ccffee)", "rgba(00ff99ee)"}, angle = 45 },
-            inactive_border = "rgba(595959aa)",
+            active_border   = { colors = {"rgba(60e7ffee)", "rgba(bb9affee)"}, angle = 45 },
+            inactive_border = "rgba(1b304baa)",
         },
 
         -- Set to true to enable resizing windows by clicking and dragging on borders and gaps
@@ -294,7 +294,7 @@ local mainMod = "SUPER" -- Sets "Windows" key as main modifier
 hl.bind(mainMod .. " + N", hl.dsp.exec_cmd("swaync-client -t"))
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("blueman-manager"))
 hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("hyprlock"))
-hl.bind(mainMod .. " + SHIFT + N", hl.dsp.exec_cmd("nm-connection-editor"))
+hl.bind(mainMod .. " + SHIFT + N", hl.dsp.exec_cmd("python3 ~/.config/hypr/connections.py"))
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen({ mode = "fullscreen", action = "toggle" }))
 hl.bind("Print", hl.dsp.exec_cmd("sh ~/.config/hypr/screenshot.sh region"))
 hl.bind("SHIFT + Print", hl.dsp.exec_cmd("sh ~/.config/hypr/screenshot.sh full"))
@@ -359,6 +359,12 @@ hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = tr
 -- See https://wiki.hypr.land/configuring/core/rules/
 
 -- Example window rules that are useful
+
+hl.window_rule({
+    name = "orbital-connections",
+    match = { class = "^local[.]orbital[.]Connections$" },
+    float = true,
+})
 
 local suppressMaximizeRule = hl.window_rule({
     -- Ignore maximize requests from all apps. You'll probably like this.

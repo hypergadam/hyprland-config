@@ -4,6 +4,7 @@ import fcntl
 import json
 import os
 from pathlib import Path
+import signal
 import socket
 import subprocess
 import sys
@@ -39,7 +40,22 @@ def refresh(notify=True):
         temporary.write_text(json.dumps(value) + "\n")
         temporary.replace(STATE / f"{workspace}.json")
     if notify:
-        subprocess.run(["pkill", "-RTMIN+8", "-u", str(os.getuid()), "-x", "waybar"], check=False)
+        # A real-time signal terminates Waybar before its handler is installed.
+        # Startup already publishes the initial state, so only notify ready bars.
+        update_signal = signal.SIGRTMIN + 8
+        processes = subprocess.run(
+            ["pgrep", "-u", str(os.getuid()), "-x", "waybar"],
+            capture_output=True, text=True, check=False,
+        )
+        for pid in processes.stdout.split():
+            try:
+                status = (Path("/proc") / pid / "status").read_text()
+                caught = next(line.split()[1] for line in status.splitlines()
+                              if line.startswith("SigCgt:"))
+                if int(caught, 16) & (1 << (update_signal - 1)):
+                    os.kill(int(pid), update_signal)
+            except (FileNotFoundError, ProcessLookupError, PermissionError):
+                pass
 
 
 def main():
