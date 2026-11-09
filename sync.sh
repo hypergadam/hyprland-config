@@ -7,6 +7,7 @@ set -- \
     hypr/hyprland.lua \
     hypr/hyprlock.conf \
     hypr/start-panel.sh \
+    hypr/start-portals.sh \
     hypr/connections.py \
     hypr/launch-apidog.sh \
     hypr/power-menu.sh \
@@ -15,7 +16,8 @@ set -- \
     waybar/config.jsonc \
     waybar/style.css \
     waybar/workspace-status.py \
-    fuzzel/fuzzel.ini
+    fuzzel/fuzzel.ini \
+    systemd/user/hyprland-session.target
 for relative in "$@"
 do
     if [ ! -f "$config_dir/$relative" ]; then

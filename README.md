@@ -28,6 +28,8 @@ Future assistant changes to these live files should also run this command.
 - `flock` (util-linux), used to prevent duplicate Waybar supervisors
 - `swaybg`, used to display the sci-fi wallpaper on every monitor
 - Fuzzel, WezTerm, Dolphin
+- systemd user services, `dbus-update-activation-environment`,
+  `xdg-desktop-portal`, `xdg-desktop-portal-hyprland`, `xdg-desktop-portal-gtk`
 - SwayNotificationCenter (`swaync`), NetworkManager applet and connection editor,
   Blueman
 - WirePlumber (`wpctl`), `kcmshell6 kcm_pulseaudio`, `brightnessctl`, `playerctl`
@@ -63,6 +65,18 @@ Install the required programs, back up the corresponding existing files under
 `~/.config/`, then copy the contents of this repository's `.config/` there.
 Review the monitor, battery, and backlight settings before reloading Hyprland
 and Waybar. This configuration uses Hyprland's Lua API.
+
+Run `systemctl --user daemon-reload` after restoring the systemd user target.
+Hyprland runs `hypr/start-portals.sh` at login to export its display environment,
+start `hyprland-session.target` (which activates `graphical-session.target`),
+and start the desktop portal. It stops the session target at shutdown.
+This Fedora installation does not ship a built-in `hyprland-session.target`;
+the saved user target supplies it. The GTK portal provides the file picker,
+allowing sandboxed apps such as Telegram to select real home-directory files.
+To apply this to an existing session, run `sh ~/.config/hypr/start-portals.sh`
+after `daemon-reload`, then fully quit and reopen Telegram.
+If a future Hyprland package supplies automatic systemd session management,
+remove this custom target and the startup/shutdown hooks in favor of it.
 
 The Apidog launcher is saved separately under `.local/share/applications/`.
 When restoring it for a different user, update its absolute Exec and Icon paths.

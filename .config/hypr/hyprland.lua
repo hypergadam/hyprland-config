@@ -64,7 +64,12 @@ local menu        = "fuzzel"
 -- See https://wiki.hypr.land/configuring/core/autostart/
 
 hl.on("hyprland.start", function ()
+    hl.exec_cmd("sh ~/.config/hypr/start-portals.sh")
     hl.exec_cmd("sh ~/.config/hypr/start-panel.sh")
+end)
+
+hl.on("hyprland.shutdown", function ()
+    os.execute("systemctl --user stop hyprland-session.target")
 end)
 
 -- Autostart necessary processes (like notifications daemons, status bars, etc.)
