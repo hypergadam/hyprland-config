@@ -88,6 +88,10 @@ Apidog modal dialogs (including its file picker) float, center, and use 80% of
 the monitor width and 75% of its height. When the AOC (`HDMI-A-1`) is connected
 at config load, they open there. Otherwise they fit the selected display.
 
+JetBrains Toolbox floats and opens centered on its monitor. Its main window
+ignores X11 configure requests so tray placement cannot move it off-screen
+with the external display to the left of the scaled laptop display.
+
 ## Connections
 
 Click the network icon on either bar or press **Super+Shift+N** to open the

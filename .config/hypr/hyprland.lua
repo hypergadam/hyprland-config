@@ -371,6 +371,15 @@ hl.window_rule({
     float = true,
 })
 
+-- Toolbox's XWayland tray placement can put its window beyond the left display.
+hl.window_rule({
+    name = "jetbrains-toolbox-placement",
+    match = { class = "^jetbrains-toolbox$", title = "^Toolbox$" },
+    float = true,
+    center = true,
+    suppress_event = "maximize x11configurerequest",
+})
+
 -- Apidog's file picker can retain an external-display size on the laptop.
 -- Keep modal dialogs on the AOC when present and fit either screen's scale.
 local apidogDialogRule = {
