@@ -136,3 +136,10 @@ refreshed every five seconds. Amber starts at 80°C and red at 95°C; these are
 display thresholds. The sensor is resolved under `/sys/devices/pci0000:00/0000:00:18.3/hwmon`
 with `temp1_input`, so hwmon numbering changes do not affect it.
 On different hardware, update `hwmon-path-abs` and `input-filename` in both bars.
+
+## Notification popups
+
+SwayNC's default popup timeout is 30 seconds for normal, low and critical
+notifications. Expired popups remain in the notification center (Super+N).
+Hovering pauses the popup timer; leaving starts it again. Applications that
+explicitly request a positive expiration time override SwayNC's defaults.
