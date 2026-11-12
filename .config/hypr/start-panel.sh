@@ -36,7 +36,7 @@ if [ -z "$wallpaper_renderer" ] && [ -x "$HOME/.local/bin/swaybg" ]; then
     wallpaper_renderer="$HOME/.local/bin/swaybg"
 fi
 if [ -n "$wallpaper_renderer" ] && ! pgrep -u "$(id -u)" -x swaybg >/dev/null; then
-    "$wallpaper_renderer" -i "$HOME/.config/hypr/wallpapers/orbital-ring.png" -m fill \
+    "$wallpaper_renderer" -i "$HOME/.config/hypr/wallpapers/material-you.jpg" -m fill \
         >>"$panel_state/wallpaper.log" 2>&1 &
 fi
 python3 "$HOME/.config/waybar/workspace-status.py" --init >>"$panel_state/workspaces.log" 2>&1

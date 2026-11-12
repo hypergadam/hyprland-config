@@ -119,13 +119,13 @@ hl.env("HYPRCURSOR_SIZE", "24")
 hl.config({
     general = {
         gaps_in  = 5,
-        gaps_out = 20,
+        gaps_out = 12,
 
         border_size = 2,
 
         col = {
-            active_border   = { colors = {"rgba(60e7ffee)", "rgba(bb9affee)"}, angle = 45 },
-            inactive_border = "rgba(1b304baa)",
+            active_border   = { colors = {"rgba(d0bcffee)", "rgba(ccc2dcee)"}, angle = 45 },
+            inactive_border = "rgba(49454fbb)",
         },
 
         -- Set to true to enable resizing windows by clicking and dragging on borders and gaps
@@ -138,7 +138,7 @@ hl.config({
     },
 
     decoration = {
-        rounding       = 10,
+        rounding       = 20,
         rounding_power = 2,
 
         -- Change transparency of focused and unfocused windows
@@ -147,15 +147,15 @@ hl.config({
 
         shadow = {
             enabled      = true,
-            range        = 4,
+            range        = 18,
             render_power = 3,
-            color        = 0xee1a1a1a,
+            color        = 0x55141018,
         },
 
         blur = {
             enabled   = true,
-            size      = 3,
-            passes    = 1,
+            size      = 6,
+            passes    = 2,
             vibrancy  = 0.1696,
         },
     },
@@ -192,6 +192,14 @@ hl.animation({ leaf = "workspaces",    enabled = true,  speed = 1.94, bezier = "
 hl.animation({ leaf = "workspacesIn",  enabled = true,  speed = 1.21, bezier = "almostLinear", style = "fade" })
 hl.animation({ leaf = "workspacesOut", enabled = true,  speed = 1.94, bezier = "almostLinear", style = "fade" })
 hl.animation({ leaf = "zoomFactor",    enabled = true,  speed = 7,    bezier = "quick" })
+
+-- Material motion: gentle entry and lateral workspace transitions.
+hl.curve("materialDecel", { type = "bezier", points = { {0.05, 0.7}, {0.1, 1} } })
+hl.curve("materialStandard", { type = "bezier", points = { {0.2, 0}, {0, 1} } })
+hl.animation({ leaf = "windowsIn", enabled = true, speed = 4, bezier = "materialDecel", style = "popin 94%" })
+hl.animation({ leaf = "workspaces", enabled = true, speed = 3, bezier = "materialStandard", style = "slidefade 15%" })
+hl.animation({ leaf = "workspacesIn", enabled = true, speed = 3, bezier = "materialStandard", style = "slidefade 15%" })
+hl.animation({ leaf = "workspacesOut", enabled = true, speed = 3, bezier = "materialStandard", style = "slidefade 15%" })
 
 -- Ref https://wiki.hypr.land/configuring/core/rules/workspace-rules/
 -- Separate workspaces for each screen. Super+0 selects workspace 10.
@@ -249,7 +257,7 @@ hl.config({
 hl.config({
     misc = {
         force_default_wallpaper = -1,    -- Set to 0 or 1 to disable the anime mascot wallpapers
-        disable_hyprland_logo   = false, -- If true disables the random hyprland logo / anime girl background. :(
+        disable_hyprland_logo   = true, -- If true disables the random hyprland logo / anime girl background. :(
     },
 })
 
@@ -260,10 +268,10 @@ hl.config({
 
 hl.config({
     input = {
-        kb_layout  = "us",
+        kb_layout  = "us,ru",
         kb_variant = "",
         kb_model   = "",
-        kb_options = "",
+        kb_options = "grp:alt_shift_toggle",
         kb_rules   = "",
 
         follow_mouse = 1,

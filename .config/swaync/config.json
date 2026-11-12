@@ -1,0 +1,91 @@
+{
+  "$schema": "/etc/xdg/swaync/configSchema.json",
+  "ignore-gtk-theme": true,
+  "positionX": "right",
+  "positionY": "top",
+  "layer": "overlay",
+  "control-center-layer": "top",
+  "layer-shell": true,
+  "layer-shell-cover-screen": true,
+  "cssPriority": "user",
+  "control-center-margin-top": 62,
+  "control-center-margin-bottom": 12,
+  "control-center-margin-right": 12,
+  "control-center-margin-left": 0,
+  "notification-2fa-action": true,
+  "notification-inline-replies": false,
+  "notification-body-image-height": 100,
+  "notification-body-image-width": 200,
+  "timeout": 7,
+  "timeout-low": 5,
+  "timeout-critical": 0,
+  "fit-to-screen": true,
+  "relative-timestamps": true,
+  "control-center-width": 400,
+  "control-center-height": 680,
+  "notification-window-width": 380,
+  "keyboard-shortcuts": true,
+  "notification-grouping": true,
+  "image-visibility": "when-available",
+  "transition-time": 200,
+  "hide-on-clear": false,
+  "hide-on-action": true,
+  "text-empty": "All caught up",
+  "script-fail-notify": true,
+  "widgets": [
+    "title",
+    "buttons-grid",
+    "volume",
+    "backlight",
+    "mpris",
+    "dnd",
+    "notifications"
+  ],
+  "widget-config": {
+    "title": {
+      "text": "Your space",
+      "clear-all-button": true,
+      "button-text": "Clear all"
+    },
+    "dnd": {
+      "text": "Quiet mode"
+    },
+    "notifications": {
+      "vexpand": true
+    },
+    "volume": {
+      "label": "",
+      "show-per-app": true
+    },
+    "backlight": {
+      "label": "",
+      "device": "amdgpu_bl1",
+      "min": 5
+    },
+    "mpris": {
+      "autohide": true,
+      "show-album-art": "always"
+    },
+    "buttons-grid": {
+      "buttons-per-row": 4,
+      "actions": [
+        {
+          "label": "  Wi-Fi",
+          "command": "python3 /home/hypergadam/.config/hypr/connections.py"
+        },
+        {
+          "label": "  Bluetooth",
+          "command": "blueman-manager"
+        },
+        {
+          "label": "  Lock",
+          "command": "hyprlock"
+        },
+        {
+          "label": "  Power",
+          "command": "sh /home/hypergadam/.config/hypr/power-menu.sh"
+        }
+      ]
+    }
+  }
+}

@@ -13,10 +13,13 @@ set -- \
     hypr/power-menu.sh \
     hypr/screenshot.sh \
     hypr/wallpapers/orbital-ring.png \
+    hypr/wallpapers/material-you.jpg \
     waybar/config.jsonc \
     waybar/style.css \
     waybar/workspace-status.py \
     fuzzel/fuzzel.ini \
+    swaync/config.json \
+    swaync/style.css \
     systemd/user/hyprland-session.target
 for relative in "$@"
 do

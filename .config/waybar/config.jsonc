@@ -2,38 +2,29 @@
   {
     "layer": "top",
     "position": "top",
-    "height": 36,
+    "height": 44,
     "spacing": 4,
     "modules-left": [
+      "custom/launcher",
       "custom/workspace1",
       "custom/workspace2",
       "custom/workspace3",
       "custom/workspace4",
       "custom/workspace5",
-      "custom/media"
+      "mpris"
     ],
     "modules-center": [
       "clock"
     ],
     "modules-right": [
-      "backlight",
-      "cpu",
-      "memory",
-      "wireplumber",
-      "network",
-      "bluetooth",
+      "group/system",
+      "group/controls",
+      "group/connectivity",
       "battery",
       "custom/notifications",
       "tray",
       "custom/power"
     ],
-    "custom/media": {
-      "format": "  ",
-      "tooltip-format": "Click: play/pause \u00b7 Right-click: next track \u00b7 Middle-click: previous track",
-      "on-click": "playerctl play-pause",
-      "on-click-right": "playerctl next",
-      "on-click-middle": "playerctl previous"
-    },
     "cpu": {
       "interval": 3,
       "format": "  {usage}%",
@@ -46,16 +37,20 @@
     },
     "wireplumber": {
       "format": "{icon}  {volume}%",
-      "format-icons": ["", "", ""],
+      "format-icons": [
+        "",
+        "",
+        ""
+      ],
       "format-muted": "  Muted",
       "scroll-step": 5,
       "max-volume": 100,
       "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
       "on-click-right": "kcmshell6 kcm_pulseaudio",
-      "tooltip-format": "{node_name}\nScroll: volume \u00b7 Click: mute \u00b7 Right-click: sound settings"
+      "tooltip-format": "{node_name}\nScroll: volume · Click: mute · Right-click: sound settings"
     },
     "clock": {
-      "format": "  {:%a %d %b  %H:%M}",
+      "format": "{:%a, %d %b  ·  %H:%M}",
       "tooltip-format": "{:%A, %d %B %Y}"
     },
     "network": {
@@ -85,14 +80,20 @@
         "critical": 10
       },
       "format": "{icon}  {capacity}%",
-      "format-icons": ["", "", "", "", ""],
+      "format-icons": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
       "format-charging": "  {capacity}%",
       "format-full": "  {capacity}%",
-      "tooltip-format": "{capacity}% \u00b7 {timeTo}"
+      "tooltip-format": "{capacity}% · {timeTo}"
     },
     "custom/notifications": {
       "format": "",
-      "tooltip-format": "Click to open notifications \u00b7 Super+N",
+      "tooltip-format": "Click to open notifications · Super+N",
       "on-click": "swaync-client -t"
     },
     "tray": {
@@ -143,43 +144,90 @@
       "on-scroll-down": "brightnessctl -d amdgpu_bl1 --min-value=3277 set 5%-",
       "on-click": "brightnessctl -d amdgpu_bl1 set +5%",
       "on-click-right": "brightnessctl -d amdgpu_bl1 --min-value=3277 set 5%-"
+    },
+    "margin-top": 8,
+    "margin-left": 10,
+    "margin-right": 10,
+    "margin-bottom": 0,
+    "custom/launcher": {
+      "format": "󰀻",
+      "tooltip-format": "Applications · Super+Space",
+      "on-click": "fuzzel"
+    },
+    "group/system": {
+      "orientation": "horizontal",
+      "modules": [
+        "cpu",
+        "memory",
+        "temperature"
+      ]
+    },
+    "group/controls": {
+      "orientation": "horizontal",
+      "modules": [
+        "backlight",
+        "wireplumber"
+      ]
+    },
+    "group/connectivity": {
+      "orientation": "horizontal",
+      "modules": [
+        "network",
+        "bluetooth"
+      ]
+    },
+    "mpris": {
+      "format": "{player_icon}  {dynamic}",
+      "format-paused": "{status_icon}  {dynamic}",
+      "player-icons": {
+        "default": "",
+        "spotify": "",
+        "firefox": ""
+      },
+      "status-icons": {
+        "paused": ""
+      },
+      "dynamic-len": 22,
+      "tooltip-format": "{title}\n{artist}\nClick: play/pause · Right-click: next",
+      "on-click": "playerctl play-pause",
+      "on-click-right": "playerctl next"
+    },
+    "temperature": {
+      "hwmon-path-abs": "/sys/devices/pci0000:00/0000:00:18.3/hwmon",
+      "input-filename": "temp1_input",
+      "interval": 5,
+      "format": "  {temperatureC}°C",
+      "tooltip-format": "CPU temperature (AMD Tctl): {temperatureC}°C",
+      "warning-threshold": 80,
+      "critical-threshold": 95
     }
   },
   {
     "layer": "top",
     "position": "top",
-    "height": 36,
+    "height": 44,
     "spacing": 4,
     "modules-left": [
+      "custom/launcher",
       "custom/workspace6",
       "custom/workspace7",
       "custom/workspace8",
       "custom/workspace9",
       "custom/workspace10",
-      "custom/media"
+      "mpris"
     ],
     "modules-center": [
       "clock"
     ],
     "modules-right": [
-      "backlight",
-      "cpu",
-      "memory",
-      "wireplumber",
-      "network",
-      "bluetooth",
+      "temperature",
+      "group/controls",
+      "group/connectivity",
       "battery",
       "custom/notifications",
       "tray",
       "custom/power"
     ],
-    "custom/media": {
-      "format": "  ",
-      "tooltip-format": "Click: play/pause \u00b7 Right-click: next track \u00b7 Middle-click: previous track",
-      "on-click": "playerctl play-pause",
-      "on-click-right": "playerctl next",
-      "on-click-middle": "playerctl previous"
-    },
     "cpu": {
       "interval": 3,
       "format": "  {usage}%",
@@ -192,21 +240,25 @@
     },
     "wireplumber": {
       "format": "{icon}  {volume}%",
-      "format-icons": ["", "", ""],
+      "format-icons": [
+        "",
+        "",
+        ""
+      ],
       "format-muted": "  Muted",
       "scroll-step": 5,
       "max-volume": 100,
       "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
       "on-click-right": "kcmshell6 kcm_pulseaudio",
-      "tooltip-format": "{node_name}\nScroll: volume \u00b7 Click: mute \u00b7 Right-click: sound settings"
+      "tooltip-format": "{node_name}\nScroll: volume · Click: mute · Right-click: sound settings"
     },
     "clock": {
-      "format": "  {:%a %d %b  %H:%M}",
+      "format": "{:%a %d · %H:%M}",
       "tooltip-format": "{:%A, %d %B %Y}"
     },
     "network": {
-      "format-wifi": "  {signalStrength}%",
-      "format-ethernet": "  Online",
+      "format-wifi": "",
+      "format-ethernet": "",
       "format-linked": "",
       "format-disconnected": "",
       "tooltip-format": "{essid}\n{ifname}: {ipaddr}\nClick: connection manager · Right-click: advanced settings",
@@ -231,14 +283,20 @@
         "critical": 10
       },
       "format": "{icon}  {capacity}%",
-      "format-icons": ["", "", "", "", ""],
+      "format-icons": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
       "format-charging": "  {capacity}%",
       "format-full": "  {capacity}%",
-      "tooltip-format": "{capacity}% \u00b7 {timeTo}"
+      "tooltip-format": "{capacity}% · {timeTo}"
     },
     "custom/notifications": {
       "format": "",
-      "tooltip-format": "Click to open notifications \u00b7 Super+N",
+      "tooltip-format": "Click to open notifications · Super+N",
       "on-click": "swaync-client -t"
     },
     "tray": {
@@ -283,12 +341,67 @@
     },
     "backlight": {
       "device": "amdgpu_bl1",
-      "format": "  {percent}%",
+      "format": "",
       "tooltip-format": "Laptop screen brightness: {percent}%\nLeft-click / scroll up: brighter (+5%)\nRight-click / scroll down: dimmer (-5%)",
       "on-scroll-up": "brightnessctl -d amdgpu_bl1 set +5%",
       "on-scroll-down": "brightnessctl -d amdgpu_bl1 --min-value=3277 set 5%-",
       "on-click": "brightnessctl -d amdgpu_bl1 set +5%",
       "on-click-right": "brightnessctl -d amdgpu_bl1 --min-value=3277 set 5%-"
+    },
+    "margin-top": 8,
+    "margin-left": 10,
+    "margin-right": 10,
+    "margin-bottom": 0,
+    "custom/launcher": {
+      "format": "󰀻",
+      "tooltip-format": "Applications · Super+Space",
+      "on-click": "fuzzel"
+    },
+    "group/system": {
+      "orientation": "horizontal",
+      "modules": [
+        "cpu",
+        "memory"
+      ]
+    },
+    "group/controls": {
+      "orientation": "horizontal",
+      "modules": [
+        "backlight",
+        "wireplumber"
+      ]
+    },
+    "group/connectivity": {
+      "orientation": "horizontal",
+      "modules": [
+        "network",
+        "bluetooth"
+      ]
+    },
+    "mpris": {
+      "format": "{player_icon}  {dynamic}",
+      "format-paused": "{status_icon}  {dynamic}",
+      "player-icons": {
+        "default": "",
+        "spotify": "",
+        "firefox": ""
+      },
+      "status-icons": {
+        "paused": ""
+      },
+      "dynamic-len": 12,
+      "tooltip-format": "{title}\n{artist}\nClick: play/pause · Right-click: next",
+      "on-click": "playerctl play-pause",
+      "on-click-right": "playerctl next"
+    },
+    "temperature": {
+      "hwmon-path-abs": "/sys/devices/pci0000:00/0000:00:18.3/hwmon",
+      "input-filename": "temp1_input",
+      "interval": 5,
+      "format": "  {temperatureC}°C",
+      "tooltip-format": "CPU temperature (AMD Tctl): {temperatureC}°C",
+      "warning-threshold": 80,
+      "critical-threshold": 95
     }
   }
 ]

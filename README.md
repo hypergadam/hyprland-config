@@ -40,11 +40,16 @@ Future assistant changes to these live files should also run this command.
 
 ## Hardware settings
 
-The Orbital theme uses a generated wallpaper at
-`.config/hypr/wallpapers/orbital-ring.png`, cyan/violet window borders, and
-matching Waybar and Fuzzel colors. The panel startup script restores the
-wallpaper at login. Install `swaybg` with your package manager when restoring;
-the script also accepts a user-local executable at `~/.local/bin/swaybg`.
+The Material You appearance uses lavender primary accents, rounded tonal Waybar
+controls, a matching Fuzzel launcher and Hyprlock screen, and soft window shadows.
+Keyboard layouts, shortcuts, monitor assignments and existing panel actions are preserved.
+This adapts the appearance to the existing Fedora desktop; the full HyprYou shell
+and automatic wallpaper color generation are not installed.
+
+The wallpaper `.config/hypr/wallpapers/material-you.jpg` comes from
+[HyprYou](https://github.com/koeqaife/hyprland-material-you), whose license is
+saved in `THIRD_PARTY/HyprYou-LICENSE`. The original Orbital wallpaper is retained.
+`swaybg` displays the wallpaper at login (system executable or `~/.local/bin/swaybg`).
 
 Hyprland starts the panel script automatically at login. The script keeps one
 Waybar supervisor running for the Wayland session and restarts Waybar after an
@@ -108,3 +113,26 @@ Connect, disconnect, toggle Wi-Fi, and use the switch beside a saved connection 
 connection. Its menu provides settings, password entry and a confirmed Forget
 action. Passwords are passed to NetworkManager through standard input, never
 saved in these dotfiles. Existing profiles and credentials stay in NetworkManager.
+
+## Material You polish
+
+The notification button (or Super+N) opens the themed SwayNotificationCenter:
+quick access to connections, Bluetooth, lock and power; volume with optional
+per-app controls; laptop brightness; and media artwork when a player is active.
+Its configuration and CSS are mirrored under `.config/swaync/`.
+The stylesheet extends `/etc/xdg/swaync/style.css` (SwayNC 0.12.6).
+
+The bar groups sound/brightness and connectivity into tonal capsules. The laptop
+bar omits CPU/RAM readouts to fit the scaled screen; the external bar retains them.
+Waybar's MPRIS module shows actual track information only when a player is available.
+The application button opens Fuzzel; existing keyboard shortcuts stay the same.
+Restore `.config/swaync/` alongside the other configs and reload SwayNC with
+`swaync-client -R` and `swaync-client -rs`.
+
+## CPU temperature
+
+Both panels display AMD CPU Tctl temperature using Waybar's temperature module,
+refreshed every five seconds. Amber starts at 80°C and red at 95°C; these are
+display thresholds. The sensor is resolved under `/sys/devices/pci0000:00/0000:00:18.3/hwmon`
+with `temp1_input`, so hwmon numbering changes do not affect it.
+On different hardware, update `hwmon-path-abs` and `input-filename` in both bars.
