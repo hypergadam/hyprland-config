@@ -143,3 +143,18 @@ SwayNC's default popup timeout is 30 seconds for normal, low and critical
 notifications. Expired popups remain in the notification center (Super+N).
 Hovering pauses the popup timer; leaving starts it again. Applications that
 explicitly request a positive expiration time override SwayNC's defaults.
+
+## Laptop layout — Lavender Dunes
+
+The laptop uses a 1600×900 logical desktop at 120% scale.
+Floating surfaces group workspaces and essential status; the central clock
+stays clear. The notification button opens Wi-Fi, Bluetooth, brightness and
+media controls; sound and battery remain directly visible beside CPU temperature.
+The external display retains its fuller status layout at 100% scale.
+
+The original vector wallpaper is `hypr/wallpapers/lavender-dunes.svg`; its PNG
+render is used by swaybg and Hyprlock. The wallpaper is run by the systemd user
+unit `hypr-wallpaper.service`, started by `hypr/start-panel.sh`, and stopped
+with the Hyprland session. After restoring run `systemctl --user daemon-reload`
+and `systemctl --user start hypr-wallpaper.service` inside Hyprland.
+The helper accepts system swaybg or `~/.local/bin/swaybg`.

@@ -7,6 +7,7 @@ set -- \
     hypr/hyprland.lua \
     hypr/hyprlock.conf \
     hypr/start-panel.sh \
+    hypr/start-wallpaper.sh \
     hypr/start-portals.sh \
     hypr/connections.py \
     hypr/launch-apidog.sh \
@@ -14,12 +15,15 @@ set -- \
     hypr/screenshot.sh \
     hypr/wallpapers/orbital-ring.png \
     hypr/wallpapers/material-you.jpg \
+    hypr/wallpapers/lavender-dunes.svg \
+    hypr/wallpapers/lavender-dunes.png \
     waybar/config.jsonc \
     waybar/style.css \
     waybar/workspace-status.py \
     fuzzel/fuzzel.ini \
     swaync/config.json \
     swaync/style.css \
+    systemd/user/hypr-wallpaper.service \
     systemd/user/hyprland-session.target
 for relative in "$@"
 do

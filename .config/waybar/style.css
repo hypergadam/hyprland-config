@@ -1,99 +1,53 @@
-/* Material You: tonal surfaces, lavender primary and pill controls. */
+/* Lavender Dunes — restrained floating surfaces, scaled for the laptop. */
 * {
   font-family: "Noto Sans", "Symbols Nerd Font Mono", sans-serif;
-  font-size: 12px;
-  min-height: 0;
+  font-size: 12px; min-height: 0;
+  transition: background-color 160ms ease, color 160ms ease;
 }
-window#waybar {
-  background: rgba(29, 27, 32, 0.97);
-  color: #e6e0e9;
-  border: 1px solid #49454f;
-  border-radius: 22px;
+window#waybar { background: transparent; color: #e6e0ef; }
+.modules-left, .modules-center, .modules-right { padding: 2px 0; }
+#workspaces, #system, #controls, #connectivity, #status, #clock, #mpris, #tray,
+#custom-launcher, #custom-power, #battery, #custom-notifications, #temperature {
+  background: rgba(29, 29, 46, 0.95); border-radius: 16px;
+  border: 1px solid rgba(187, 177, 216, 0.16);
+  margin: 1px 0; padding: 0 10px;
 }
-.modules-left, .modules-right { padding: 0 6px; }
-.workspace-button, #workspaces button {
-  padding: 0 8px;
-  margin: 6px 1px;
-  border-radius: 16px;
-  color: #cac4d0;
-  background: transparent;
-  border: none;
-  box-shadow: none;
+#workspaces { padding: 0 5px; }
+.workspace-button {
+  color: #a9a4bc; border-radius: 12px; padding: 0 8px; margin: 4px 1px;
+  min-width: 13px; border: none; box-shadow: none;
 }
-.workspace-button:hover, #workspaces button:hover { background: #36343b; }
-.workspace-button.active, #workspaces button.active {
-  background: #d0bcff;
-  color: #381e72;
-  font-weight: bold;
+.workspace-button.active { background: #c4b5ed; color: #2b2541; font-weight: 700; }
+.workspace-button:hover { background: #48405e; color: #eee5ff; }
+#custom-launcher { background: #c4b5ed; color: #29223c; padding: 0 12px; font-size: 19px; }
+#custom-launcher:hover { background: #e2d5ff; }
+#clock { color: #f0e9fa; font-weight: 700; padding: 0 18px; }
+#mpris { color: #d3c5e7; font-size: 11px; }
+#mpris.paused { color: #a39cb5; }
+#mpris:hover, #custom-power:hover { background: #3b334f; }
+#custom-power { color: #e6b9c8; padding: 0 12px; }
+#system, #controls, #connectivity, #status { padding: 0 6px; }
+#cpu, #memory, #backlight, #wireplumber, #network, #bluetooth { padding: 0 8px; }
+#system #temperature, #status #temperature, #status #battery, #status #custom-notifications {
+  background: transparent; border: none; margin: 0; padding: 0 9px;
 }
-#clock, #network, #bluetooth, #battery, #custom-notifications, #tray,
-#custom-media, #cpu, #memory, #wireplumber, #backlight, #custom-power {
-  padding: 0 8px;
-  margin: 6px 0;
-  border-radius: 18px;
-  background: #2b2930;
-  color: #cac4d0;
+#temperature { color: #bcd7bc; }
+#temperature.warning { color: #f5d1a5; }
+#temperature.critical, #system #temperature.critical, #status #temperature.critical {
+  color: #ffdad6; background: #8b3344;
 }
-#clock {
-  background: #4f378b;
-  color: #eaddff;
-  padding: 0 16px;
-  font-weight: 600;
-}
-#wireplumber, #custom-media { color: #d0bcff; }
-#network, #bluetooth { color: #ccc2dc; }
-#backlight, #custom-notifications { color: #efb8c8; }
-#battery.charging { color: #b6d7a8; }
-#network.disconnected, #battery.warning { color: #ffddb3; }
-#battery.critical:not(.charging) { background: #93000a; color: #ffdad6; }
-#wireplumber.muted, #bluetooth.disabled, #bluetooth.off { color: #938f99; }
-#custom-power { color: #ffb4ab; padding: 0 11px; }
-#custom-media:hover, #custom-notifications:hover, #backlight:hover,
-#wireplumber:hover, #network:hover, #bluetooth:hover, #custom-power:hover {
-  background: #49454f;
-}
-tooltip { background: #2b2930; border: 1px solid #49454f; border-radius: 16px; }
-tooltip label { color: #e6e0e9; padding: 8px; }
-
-/* Tonal groups keep related controls together and let the wallpaper breathe. */
-* { transition: background-color 180ms ease, color 180ms ease; }
-window#waybar { background: rgba(24, 22, 29, 0.96); border-color: rgba(147, 143, 153, 0.28); }
-#custom-launcher {
-  background: #d0bcff; color: #381e72; border-radius: 18px;
-  margin: 6px 6px 6px 0; padding: 0 12px; font-size: 20px;
-}
-#custom-launcher:hover { background: #eaddff; }
-#system, #controls, #connectivity {
-  background: #2b2930; border-radius: 18px; margin: 6px 0; padding: 0 3px;
-}
-#system #cpu, #system #memory, #controls #backlight, #controls #wireplumber,
-#connectivity #network, #connectivity #bluetooth {
-  background: transparent; margin: 0; padding: 0 7px;
-}
-#controls #backlight:hover, #controls #wireplumber:hover,
-#connectivity #network:hover, #connectivity #bluetooth:hover { background: #49454f; }
-#system { background: transparent; }
-#system #cpu, #system #memory { color: #938f99; font-size: 11px; }
-#mpris {
-  color: #ccc2dc; background: #302a38; border-radius: 18px;
-  margin: 6px 0 6px 6px; padding: 0 12px;
-}
-#mpris.paused { color: #938f99; }
-#mpris:hover { background: #49454f; }
-#clock { background: #e8def8; color: #332d41; font-weight: 700; }
-#custom-notifications { background: #4a3540; color: #ffd8e4; }
-#custom-notifications:hover { background: #633b48; }
-#tray { background: transparent; }
-#custom-power { background: transparent; }
-.workspace-button { min-width: 16px; }
-.workspace-button.active { box-shadow: 0 2px 6px rgba(208, 188, 255, 0.18); }
-
-/* CPU temperature: AMD Tctl, polled every five seconds. */
-#temperature {
-  color: #b6d7a8; background: #2b2930; border-radius: 18px;
-  padding: 0 8px; margin: 6px 0;
-}
-#system #temperature { background: transparent; margin: 0; padding: 0 7px; }
-#temperature.warning { color: #ffddb3; }
-#temperature.critical { color: #ffdad6; background: #93000a; }
-#system #temperature.critical { background: #93000a; }
+#battery { color: #d3c5e7; }
+#battery.charging { color: #bcd7bc; }
+#battery.warning { color: #f5d1a5; }
+#battery.critical:not(.charging), #status #battery.critical:not(.charging) { background: #8b3344; color: #ffdad6; }
+#wireplumber { color: #c4b5ed; }
+#wireplumber.muted { color: #90899e; }
+#network, #bluetooth, #backlight { color: #bfb7d4; }
+#custom-notifications { color: #e6b9c8; }
+#custom-notifications:hover, #status #custom-notifications:hover { background: #493747; }
+#tray { padding: 0 8px; }
+tooltip { background: #232034; border: 1px solid #4b435e; border-radius: 16px; }
+tooltip label { color: #e6e0ef; padding: 10px; }
+window#waybar.laptop .workspace-button { padding: 0 7px; }
+window#waybar.laptop #clock { font-size: 14px; letter-spacing: 1px; padding: 0 20px; }
+window#waybar.laptop #status { padding: 0 4px; }

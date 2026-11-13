@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2560" height="1440" viewBox="0 0 2560 1440">
+<defs>
+ <linearGradient id="sky" x2="0.75" y2="1"><stop stop-color="#10192f"/><stop offset="0.52" stop-color="#373252"/><stop offset="1" stop-color="#99788c"/></linearGradient>
+ <radialGradient id="glow"><stop stop-color="#e5bdd0" stop-opacity=".36"/><stop offset="1" stop-color="#b4a1e4" stop-opacity="0"/></radialGradient>
+ <linearGradient id="moon" x2=".4" y2="1"><stop stop-color="#f4d9d9"/><stop offset="1" stop-color="#c7b7df"/></linearGradient>
+ <linearGradient id="far" x2=".2" y2="1"><stop stop-color="#72708f"/><stop offset="1" stop-color="#4c496c"/></linearGradient>
+ <linearGradient id="mid" x2=".5" y2="1"><stop stop-color="#454663"/><stop offset="1" stop-color="#2b3450"/></linearGradient>
+ <linearGradient id="near" x2=".5" y2="1"><stop stop-color="#28364e"/><stop offset="1" stop-color="#15263b"/></linearGradient>
+ <linearGradient id="front" x2="1" y2="1"><stop stop-color="#13273b"/><stop offset="1" stop-color="#101b30"/></linearGradient>
+</defs>
+<rect width="2560" height="1440" fill="url(#sky)"/>
+<ellipse cx="1820" cy="470" rx="760" ry="690" fill="url(#glow)"/>
+<circle cx="1820" cy="470" r="117" fill="url(#moon)"/>
+<g fill="#e0d5ec" opacity=".5"><circle cx="420" cy="220" r="2"/><circle cx="780" cy="355" r="1.5"/><circle cx="1260" cy="180" r="2"/><circle cx="2220" cy="260" r="1.5"/><circle cx="1020" cy="470" r="1.5"/></g>
+<path d="M0 900 Q360 760 630 870 T1280 770 Q1670 630 2010 800 T2560 720 V1440 H0Z" fill="url(#far)"/>
+<path d="M0 980 Q310 1020 640 865 T1270 890 Q1600 1050 1910 885 T2560 930 V1440 H0Z" fill="url(#mid)"/>
+<path d="M0 1150 Q400 930 800 1080 T1540 1130 Q2110 820 2560 1030 V1440 H0Z" fill="url(#near)"/>
+<path d="M0 1240 Q490 1390 1040 1210 T1900 1260 Q2230 1350 2560 1200 V1440 H0Z" fill="url(#front)"/>
+</svg>

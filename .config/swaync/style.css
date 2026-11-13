@@ -1,8 +1,8 @@
 @import url("/etc/xdg/swaync/style.css");
 :root {
-  --cc-bg: #1d1b20;
+  --cc-bg: #201d30;
   --noti-border-color: #49454f;
-  --noti-bg: 43, 41, 48;
+  --noti-bg: 40, 36, 56;
   --noti-bg-alpha: 1;
   --noti-bg-darker: #211f26;
   --noti-bg-hover: #36343b;
@@ -20,7 +20,7 @@
 .control-center { border: 1px solid #49454f; border-radius: 28px; padding: 14px; }
 .widget { margin: 6px 0; }
 .widget-title { margin: 6px 4px 12px; }
-.widget-title > label { font-size: 24px; font-weight: 700; color: #eaddff; }
+.widget-title > label { font-size: 22px; font-weight: 700; color: #eaddff; }
 .widget-title > button { background: #4f378b; color: #eaddff; border-radius: 18px; padding: 8px 14px; border: none; }
 .widget-buttons-grid flowboxchild > button {
   background: #36303f; color: #e8def8; border: none; border-radius: 20px;
@@ -30,9 +30,9 @@
 .widget-volume, .widget-backlight, .widget-dnd {
   background: #2b2930; border-radius: 22px; padding: 12px 16px;
 }
-.widget-slider label { color: #d0bcff; font-size: 18px; }
+.widget-slider label { color: #c4b5ed; font-size: 18px; }
 scale trough { background: #49454f; min-height: 8px; border-radius: 12px; }
-scale highlight { background: #d0bcff; border-radius: 12px; }
+scale highlight { background: #c4b5ed; border-radius: 12px; }
 scale slider { background: #eaddff; border: none; box-shadow: none; }
 .widget-dnd switch { background: #49454f; border-radius: 20px; }
 .widget-dnd switch:checked { background: #675080; }

@@ -23,11 +23,12 @@
 
 -- See https://wiki.hypr.land/configuring/core/monitors/
 -- Laptop stays at the origin so it also works when the external monitor is unplugged.
+-- Use 120% scaling on the laptop.
 hl.monitor({
     output   = "eDP-1",
     mode     = "1920x1080@60",
     position = "0x0",
-    scale    = 1.5,
+    scale    = 1.2,
 })
 
 -- External AOC monitor is physically to the left of the laptop.
@@ -118,13 +119,13 @@ hl.env("HYPRCURSOR_SIZE", "24")
 -- Refer to https://wiki.hypr.land/configuring/core/config-options/
 hl.config({
     general = {
-        gaps_in  = 5,
-        gaps_out = 12,
+        gaps_in  = 4,
+        gaps_out = 3,
 
         border_size = 2,
 
         col = {
-            active_border   = { colors = {"rgba(d0bcffee)", "rgba(ccc2dcee)"}, angle = 45 },
+            active_border   = { colors = {"rgba(c4b5eddd)", "rgba(afa6cfdd)"}, angle = 45 },
             inactive_border = "rgba(49454fbb)",
         },
 
@@ -138,7 +139,7 @@ hl.config({
     },
 
     decoration = {
-        rounding       = 20,
+        rounding       = 16,
         rounding_power = 2,
 
         -- Change transparency of focused and unfocused windows

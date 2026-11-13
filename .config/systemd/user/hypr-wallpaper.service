@@ -1,0 +1,10 @@
+[Unit]
+Description=Hyprland landscape wallpaper
+PartOf=hyprland-session.target
+After=hyprland-session.target
+
+[Service]
+Type=simple
+ExecStart=/bin/sh %h/.config/hypr/start-wallpaper.sh
+Restart=on-failure
+RestartSec=3

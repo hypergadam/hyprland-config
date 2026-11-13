@@ -2,15 +2,11 @@
   {
     "layer": "top",
     "position": "top",
-    "height": 44,
+    "height": 42,
     "spacing": 4,
     "modules-left": [
       "custom/launcher",
-      "custom/workspace1",
-      "custom/workspace2",
-      "custom/workspace3",
-      "custom/workspace4",
-      "custom/workspace5",
+      "group/workspaces",
       "mpris"
     ],
     "modules-center": [
@@ -51,7 +47,12 @@
     },
     "clock": {
       "format": "{:%a, %d %b  ·  %H:%M}",
-      "tooltip-format": "{:%A, %d %B %Y}"
+      "tooltip-format": "{:%A, %d %B %Y}\n{calendar}",
+      "calendar": {
+        "mode": "month",
+        "weeks-pos": "right",
+        "on-scroll": 1
+      }
     },
     "network": {
       "format-wifi": "  {signalStrength}%",
@@ -145,13 +146,13 @@
       "on-click": "brightnessctl -d amdgpu_bl1 set +5%",
       "on-click-right": "brightnessctl -d amdgpu_bl1 --min-value=3277 set 5%-"
     },
-    "margin-top": 8,
-    "margin-left": 10,
-    "margin-right": 10,
+    "margin-top": 10,
+    "margin-left": 12,
+    "margin-right": 12,
     "margin-bottom": 0,
     "custom/launcher": {
-      "format": "󰀻",
-      "tooltip-format": "Applications · Super+Space",
+      "format": "",
+      "tooltip-format": "Fedora · Applications · Super+Space",
       "on-click": "fuzzel"
     },
     "group/system": {
@@ -200,32 +201,34 @@
       "tooltip-format": "CPU temperature (AMD Tctl): {temperatureC}°C",
       "warning-threshold": 80,
       "critical-threshold": 95
+    },
+    "name": "desktop",
+    "group/workspaces": {
+      "orientation": "horizontal",
+      "modules": [
+        "custom/workspace1",
+        "custom/workspace2",
+        "custom/workspace3",
+        "custom/workspace4",
+        "custom/workspace5"
+      ]
     }
   },
   {
     "layer": "top",
     "position": "top",
-    "height": 44,
+    "height": 38,
     "spacing": 4,
     "modules-left": [
       "custom/launcher",
-      "custom/workspace6",
-      "custom/workspace7",
-      "custom/workspace8",
-      "custom/workspace9",
-      "custom/workspace10",
+      "group/workspaces",
       "mpris"
     ],
     "modules-center": [
       "clock"
     ],
     "modules-right": [
-      "temperature",
-      "group/controls",
-      "group/connectivity",
-      "battery",
-      "custom/notifications",
-      "tray",
+      "group/status",
       "custom/power"
     ],
     "cpu": {
@@ -239,13 +242,13 @@
       "tooltip-format": "{used:.1f} / {total:.1f} GiB used"
     },
     "wireplumber": {
-      "format": "{icon}  {volume}%",
+      "format": "{icon}",
       "format-icons": [
         "",
         "",
         ""
       ],
-      "format-muted": "  Muted",
+      "format-muted": "",
       "scroll-step": 5,
       "max-volume": 100,
       "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
@@ -253,8 +256,13 @@
       "tooltip-format": "{node_name}\nScroll: volume · Click: mute · Right-click: sound settings"
     },
     "clock": {
-      "format": "{:%a %d · %H:%M}",
-      "tooltip-format": "{:%A, %d %B %Y}"
+      "format": "{:%H:%M}",
+      "tooltip-format": "{:%A, %d %B %Y}\n{calendar}",
+      "calendar": {
+        "mode": "month",
+        "weeks-pos": "right",
+        "on-scroll": 1
+      }
     },
     "network": {
       "format-wifi": "",
@@ -296,7 +304,7 @@
     },
     "custom/notifications": {
       "format": "",
-      "tooltip-format": "Click to open notifications · Super+N",
+      "tooltip-format": "Control center · Super+N\nWi-Fi, Bluetooth, brightness and notifications",
       "on-click": "swaync-client -t"
     },
     "tray": {
@@ -348,13 +356,13 @@
       "on-click": "brightnessctl -d amdgpu_bl1 set +5%",
       "on-click-right": "brightnessctl -d amdgpu_bl1 --min-value=3277 set 5%-"
     },
-    "margin-top": 8,
-    "margin-left": 10,
-    "margin-right": 10,
+    "margin-top": 10,
+    "margin-left": 12,
+    "margin-right": 12,
     "margin-bottom": 0,
     "custom/launcher": {
-      "format": "󰀻",
-      "tooltip-format": "Applications · Super+Space",
+      "format": "",
+      "tooltip-format": "Fedora · Applications · Super+Space",
       "on-click": "fuzzel"
     },
     "group/system": {
@@ -389,7 +397,7 @@
       "status-icons": {
         "paused": ""
       },
-      "dynamic-len": 12,
+      "dynamic-len": 18,
       "tooltip-format": "{title}\n{artist}\nClick: play/pause · Right-click: next",
       "on-click": "playerctl play-pause",
       "on-click-right": "playerctl next"
@@ -402,6 +410,26 @@
       "tooltip-format": "CPU temperature (AMD Tctl): {temperatureC}°C",
       "warning-threshold": 80,
       "critical-threshold": 95
+    },
+    "name": "laptop",
+    "group/workspaces": {
+      "orientation": "horizontal",
+      "modules": [
+        "custom/workspace6",
+        "custom/workspace7",
+        "custom/workspace8",
+        "custom/workspace9",
+        "custom/workspace10"
+      ]
+    },
+    "group/status": {
+      "orientation": "horizontal",
+      "modules": [
+        "temperature",
+        "wireplumber",
+        "battery",
+        "custom/notifications"
+      ]
     }
   }
 ]
