@@ -1,0 +1,99 @@
+# ============================================================================
+# Single source of truth for desktop colour.
+#
+# Nothing else should contain a raw hex value. Edit this file, run
+# `~/.config/theme/theme-apply`, and every component is regenerated.
+#
+#   palette  = the raw named colours of the theme (never referenced directly
+#              by templates; swap this block to change theme wholesale)
+#   roles    = semantic names mapped onto palette keys. Templates only ever
+#              reference roles, so re-skinning is a one-line change here.
+# ============================================================================
+
+name   = "Catppuccin Mocha"
+flavour = "mocha"
+
+# --- Raw Catppuccin Mocha palette -------------------------------------------
+[palette]
+rosewater = "#f5e0dc"
+flamingo  = "#f2cdcd"
+pink      = "#f5c2e7"
+mauve     = "#cba6f7"
+red       = "#f38ba8"
+maroon    = "#eba0ac"
+peach     = "#fab387"
+yellow    = "#f9e2af"
+green     = "#a6e3a1"
+teal      = "#94e2d5"
+sky       = "#89dceb"
+sapphire  = "#74c7ec"
+blue      = "#89b4fa"
+lavender  = "#b4befe"
+text      = "#cdd6f4"
+subtext1  = "#bac2de"
+subtext0  = "#a6adc8"
+overlay2  = "#9399b2"
+overlay1  = "#7f849c"
+overlay0  = "#6c7086"
+surface2  = "#585b70"
+surface1  = "#45475a"
+surface0  = "#313244"
+base      = "#1e1e2e"
+mantle    = "#181825"
+crust     = "#11111b"
+
+# --- Semantic roles ----------------------------------------------------------
+# Change `accent` to any palette key above to re-skin the whole desktop.
+[roles]
+accent          = "mauve"      # borders, active workspace, launcher, lock ring
+accent_dim      = "lavender"   # second stop of the border gradient
+accent_text     = "crust"      # text drawn ON an accent-filled surface
+
+bg              = "base"       # primary window / panel surface
+bg_dim          = "mantle"     # recessed surface
+bg_deep         = "crust"      # deepest surface, lockscreen backdrop
+bg_raised       = "surface0"   # hovered / raised surface
+bg_selected     = "surface1"   # selection background
+
+fg              = "text"       # primary text
+fg_muted        = "subtext0"   # secondary text
+fg_disabled     = "overlay0"   # disabled text
+outline         = "surface1"   # borders, separators
+outline_inactive = "surface0"  # inactive window border
+
+error           = "red"
+warning         = "yellow"
+success         = "green"
+info            = "blue"
+
+# --- Terminal: the 16 ANSI slots --------------------------------------------
+[terminal]
+black          = "surface0"
+red            = "red"
+green          = "green"
+yellow         = "yellow"
+blue           = "blue"
+magenta        = "mauve"
+cyan           = "teal"
+white          = "subtext1"
+bright_black   = "surface2"
+bright_red     = "maroon"
+bright_green   = "green"
+bright_yellow  = "peach"
+bright_blue    = "lavender"
+bright_magenta = "pink"
+bright_cyan    = "sky"
+bright_white   = "subtext0"
+
+# --- Everything else --------------------------------------------------------
+[extra]
+cursor       = "rosewater"
+link_visited = "pink"
+
+# --- Per-surface opacity (0-255 hex appended where the tool wants RGBA) ------
+[opacity]
+border_active   = "ff"
+border_inactive = "bb"
+panel           = "f2"
+launcher        = "fa"
+terminal        = 0.95

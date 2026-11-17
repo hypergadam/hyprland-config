@@ -17,6 +17,15 @@
 -- require("myColors")
 
 
+-------------------
+---- THEME ----
+-------------------
+
+-- Colours are generated from ~/.config/theme/palette.toml by `theme-apply`.
+-- Never hardcode a colour below; add a role to palette.toml instead.
+local theme = require("theme")
+
+
 ------------------
 ---- MONITORS ----
 ------------------
@@ -92,6 +101,26 @@ end)
 hl.env("XCURSOR_SIZE", "24")
 hl.env("HYPRCURSOR_SIZE", "24")
 
+-- Cursor + icon theme, matched to the Breeze-Dark GTK/Qt theming.
+hl.env("XCURSOR_THEME", "breeze_cursors")
+hl.env("HYPRCURSOR_THEME", "breeze_cursors")
+
+-- Qt apps (Dolphin, and the KDE file dialog served by
+-- xdg-desktop-portal-kde) pick up Breeze via plasma-integration.
+-- Without this they fall back to an unstyled default that looks nothing
+-- like the rest of the desktop.
+hl.env("QT_QPA_PLATFORMTHEME", "kde")
+
+-- Let Qt follow the per-monitor scaling Hyprland already applies
+-- instead of rounding to whole integers.
+hl.env("QT_ENABLE_HIGHDPI_SCALING", "1")
+hl.env("QT_AUTO_SCREEN_SCALE_FACTOR", "1")
+hl.env("QT_WAYLAND_DISABLE_WINDOWDECORATION", "1")
+
+-- GTK apps: theme name is also read from gtk-3.0/settings.ini and
+-- gsettings; this covers apps started with a bare environment.
+hl.env("GTK_THEME", "Breeze-Dark")
+
 
 -----------------------
 ----- PERMISSIONS -----
@@ -125,8 +154,8 @@ hl.config({
         border_size = 2,
 
         col = {
-            active_border   = { colors = {"rgba(c4b5eddd)", "rgba(afa6cfdd)"}, angle = 45 },
-            inactive_border = "rgba(49454fbb)",
+            active_border   = { colors = { theme.accent, theme.accent_dim }, angle = 45 },
+            inactive_border = theme.border_inactive,
         },
 
         -- Set to true to enable resizing windows by clicking and dragging on borders and gaps
@@ -139,8 +168,12 @@ hl.config({
     },
 
     decoration = {
-        rounding       = 16,
-        rounding_power = 2,
+        -- Mochi corners: a superellipse, not a circular arc. rounding_power
+        -- above 2 straightens the sides and tightens the turn, which is the
+        -- squircle profile Apple uses for app icons -- it reads softer than a
+        -- true circle. Past ~5 it starts looking square again.
+        rounding       = 24,
+        rounding_power = 3,
 
         -- Change transparency of focused and unfocused windows
         active_opacity   = 1.0,
@@ -150,7 +183,7 @@ hl.config({
             enabled      = true,
             range        = 18,
             render_power = 3,
-            color        = 0x55141018,
+            color        = theme.shadow,
         },
 
         blur = {
@@ -402,6 +435,19 @@ if hl.get_monitor("HDMI-A-1") then
     apidogDialogRule.monitor = "HDMI-A-1"
 end
 hl.window_rule(apidogDialogRule)
+
+-- Open/Save/Import dialogs are served by xdg-desktop-portal-kde, which shows
+-- them as ordinary toplevel windows. Without a rule the tiling layout swallows
+-- them at whatever size the layout hands out, so they read as a weird half
+-- window instead of a dialog. Float, centre and size them deliberately.
+hl.window_rule({
+    name  = "portal-file-dialogs",
+    match = { class = "^org[.]freedesktop[.]impl[.]portal[.]desktop[.](kde|gtk)$" },
+
+    float  = true,
+    center = true,
+    size   = { "monitor_w * 0.62", "monitor_h * 0.70" },
+})
 
 local suppressMaximizeRule = hl.window_rule({
     -- Ignore maximize requests from all apps. You'll probably like this.

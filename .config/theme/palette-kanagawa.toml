@@ -1,0 +1,115 @@
+# ============================================================================
+# Single source of truth for desktop colour.
+#
+# Nothing else should contain a raw hex value. Edit this file, run
+# `theme-apply`, and every component is regenerated.
+#
+#   palette   the raw named colours of the theme. Swap this block (and the
+#             three mapping blocks below) to change theme wholesale.
+#   roles     semantic UI names -> palette keys
+#   terminal  the 16 ANSI slots -> palette keys
+#   extra     odds and ends that aren't surfaces
+#
+# Renderers only ever read roles/terminal/extra, never palette keys directly,
+# so any palette works as long as the three mapping blocks are filled in.
+# ============================================================================
+
+name = "Kanagawa"
+
+# --- Kanagawa: after Hokusai's "The Great Wave off Kanagawa" ----------------
+[palette]
+# ink / ground
+sumiInk0      = "#16161d"
+sumiInk1      = "#181820"
+sumiInk2      = "#1a1a22"
+sumiInk3      = "#1f1f28"
+sumiInk4      = "#2a2a37"
+sumiInk5      = "#363646"
+sumiInk6      = "#54546d"
+# wave
+waveBlue1     = "#223249"
+waveBlue2     = "#2d4f67"
+waveAqua1     = "#6a9589"
+waveAqua2     = "#7aa89f"
+dragonBlue    = "#658594"
+crystalBlue   = "#7e9cd8"
+springBlue    = "#7fb4ca"
+lightBlue     = "#a3d4d5"
+# paper / ink wash
+fujiWhite     = "#dcd7ba"
+oldWhite      = "#c8c093"
+fujiGray      = "#727169"
+katanaGray    = "#717c7c"
+# autumn
+autumnGreen   = "#76946a"
+autumnRed     = "#c34043"
+autumnYellow  = "#dca561"
+springGreen   = "#98bb6c"
+boatYellow2   = "#c0a36e"
+carpYellow    = "#e6c384"
+# blossom / alarm
+sakuraPink    = "#d27e99"
+waveRed       = "#e46876"
+peachRed      = "#ff5d62"
+samuraiRed    = "#e82424"
+roninYellow   = "#ff9e3b"
+surimiOrange  = "#ffa066"
+oniViolet     = "#957fb8"
+springViolet1 = "#938aa9"
+springViolet2 = "#9cabca"
+
+# --- Semantic UI roles ------------------------------------------------------
+# Change `accent` to any palette key above to re-skin the whole desktop.
+[roles]
+accent           = "crystalBlue"   # borders, active workspace, launcher, lock
+accent_dim       = "oniViolet"     # second stop of the border gradient
+accent_text      = "sumiInk0"      # text drawn ON an accent-filled surface
+
+bg               = "sumiInk3"      # primary window / panel surface
+bg_dim           = "sumiInk1"      # recessed surface, headerbars, views
+bg_deep          = "sumiInk0"      # deepest surface, lockscreen backdrop
+bg_raised        = "sumiInk4"      # hovered / raised surface
+bg_selected      = "waveBlue1"     # selection background
+
+fg               = "fujiWhite"     # primary text (warm parchment, not grey)
+fg_muted         = "oldWhite"      # secondary text
+fg_disabled      = "fujiGray"      # disabled text
+outline          = "sumiInk5"      # borders, separators
+outline_inactive = "sumiInk4"      # inactive window border
+
+error            = "autumnRed"
+warning          = "roninYellow"
+success          = "springGreen"
+info             = "springBlue"
+
+# --- Terminal: the 16 ANSI slots --------------------------------------------
+[terminal]
+black          = "sumiInk4"
+red            = "autumnRed"
+green          = "autumnGreen"
+yellow         = "boatYellow2"
+blue           = "crystalBlue"
+magenta        = "oniViolet"
+cyan           = "waveAqua1"
+white          = "oldWhite"
+bright_black   = "fujiGray"
+bright_red     = "samuraiRed"
+bright_green   = "springGreen"
+bright_yellow  = "carpYellow"
+bright_blue    = "springBlue"
+bright_magenta = "springViolet1"
+bright_cyan    = "waveAqua2"
+bright_white   = "fujiWhite"
+
+# --- Everything else --------------------------------------------------------
+[extra]
+cursor       = "carpYellow"
+link_visited = "sakuraPink"
+
+# --- Per-surface opacity ----------------------------------------------------
+[opacity]
+border_active   = "ff"
+border_inactive = "bb"
+panel           = "f2"
+launcher        = "fa"
+terminal        = 0.95

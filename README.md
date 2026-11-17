@@ -20,31 +20,93 @@ It also copies the Apidog application launcher from
 `${XDG_DATA_HOME:-$HOME/.local/share}/applications/apidog.desktop`.
 Future assistant changes to these live files should also run this command.
 
+Colour is the exception: never hand-edit a generated `colors.*` file. Edit
+`~/.config/theme/palette.toml`, run `theme-apply`, then `./sync.sh`. See
+**Theming**.
+
 ## Programs used
 
 - Hyprland with Lua configuration support, Hyprlock, Waybar, Python 3
 - PyGObject, GTK 4, libadwaita and libnm introspection (Fedora: `python3-gobject`,
   `gtk4`, `libadwaita`, `NetworkManager-libnm`), plus `nmcli` for connection actions
 - `flock` (util-linux), used to prevent duplicate Waybar supervisors
-- `swaybg`, used to display the sci-fi wallpaper on every monitor
-- Fuzzel, WezTerm, Dolphin
+- `swaybg`, used to display the wallpaper on every monitor
+- Fuzzel, WezTerm, kitty, Dolphin
 - systemd user services, `dbus-update-activation-environment`,
-  `xdg-desktop-portal`, `xdg-desktop-portal-hyprland`, `xdg-desktop-portal-gtk`
+  `xdg-desktop-portal`, `xdg-desktop-portal-hyprland`, `xdg-desktop-portal-gtk`,
+  `xdg-desktop-portal-kde` (file dialogs), `plasma-integration` (Qt theming)
 - SwayNotificationCenter (`swaync`), NetworkManager applet and connection editor,
   Blueman
 - WirePlumber (`wpctl`), `kcmshell6 kcm_pulseaudio`, `brightnessctl`, `playerctl`
 - `grim`, `slurp`, `wl-copy`, `notify-send`, `xdg-user-dir`
-- Noto Sans and Symbols Nerd Font Mono fonts (Waybar icons)
+- JetBrains Mono, Noto Sans and Symbols Nerd Font Mono (Waybar and terminals)
+- `breeze-gtk` and `breeze-icon-theme` -- the GTK/Qt widget theme is recoloured
+  from the palette rather than replaced (see **Theming**)
 - Optional: `hyprshutdown`
 - Optional: Apidog AppImage at `~/.local/bin/Apidog.AppImage`
 
+## Theming
+
+`.config/theme/palette.toml` is the single source of truth for colour; nothing
+else contains a raw hex value. `theme-apply` renders every themed component and
+live-reloads what it can:
+
+```sh
+theme-apply              # render all configs and reload
+theme-apply --dry-run    # show what would change
+theme-apply --check      # verify colour contracts only
+```
+
+Each component is themed through its own native include mechanism, so the
+hand-edited configs stay hand-editable and are never overwritten -- only the
+small generated colour file each one pulls in:
+
+| Component | Mechanism | Generated |
+| --- | --- | --- |
+| Hyprland | `require("theme")` | `hypr/theme.lua` |
+| Hyprlock | `source =` | `hypr/theme-colors.conf` |
+| Waybar / SwayNC | `@import url()` | `*/colors.css` |
+| Fuzzel | `include=` | `fuzzel/colors.ini` |
+| WezTerm | `color_scheme =` | `wezterm/colors/palette.toml` |
+| kitty | `include` | `kitty/current-theme.conf` |
+| GTK 3/4 | `@import 'colors.css'` | `gtk-{3,4}.0/colors.css` |
+| Qt / KDE | `[Colors:*]` blocks | `kdeglobals`, `color-schemes/*.colors` |
+| Wallpaper | path file | `hypr/theme-wallpaper` |
+
+A palette maps raw colours onto semantic names in three blocks -- `[roles]` for
+UI surfaces, `[terminal]` for the sixteen ANSI slots, `[extra]` for cursor and
+link colours. Renderers read only those mappings, never palette keys, so adding
+a theme is a data change rather than a code change. `theme-apply` refuses to run
+if a mapping points at a colour that does not exist.
+
+Saved palettes: `palette-akane.toml` (current), `palette-kanagawa.toml`,
+`palette-catppuccin-mocha.toml`. Switch with:
+
+```sh
+cp ~/.config/theme/palette-<name>.toml ~/.config/theme/palette.toml && theme-apply
+```
+
+Two details worth knowing. **GTK is Breeze-shaped but palette-coloured**: the
+Breeze GTK theme references ~86 `@*_breeze` variables it never defines (upstream
+they come from `colorreload-gtk-module` reading the KDE scheme), so we generate
+them instead -- which is why GTK follows the palette with no Catppuccin or Akane
+GTK package installed. Run `theme-apply --check` after a `breeze-gtk` update.
+**Qt reads `kdeglobals`, not the `.colors` file**: `ColorScheme=` is only a
+label, so applying a scheme means merging its `[Colors:*]` blocks into
+`kdeglobals`, which `theme-apply` does.
+
+Generated files are committed so a fresh clone works before `theme-apply` has
+been run -- `hyprland.lua` calls `require("theme")` and Hyprland will not start
+without `hypr/theme.lua`.
+
 ## Hardware settings
 
-The Material You appearance uses lavender primary accents, rounded tonal Waybar
-controls, a matching Fuzzel launcher and Hyprlock screen, and soft window shadows.
+Appearance is driven entirely by `.config/theme/palette.toml` (see **Theming**
+below). The current palette is **Akane**, ported from
+[omarchy-akane-theme](https://github.com/Grenish/omarchy-akane-theme): vermillion
+accents on dusk navy, with a warm foreground rather than grey. Waybar follows
+omarchy's flat language -- no pills, solid ground, separation by margin.
 Keyboard layouts, shortcuts, monitor assignments and existing panel actions are preserved.
-This adapts the appearance to the existing Fedora desktop; the full HyprYou shell
-and automatic wallpaper color generation are not installed.
 
 The wallpaper `.config/hypr/wallpapers/material-you.jpg` comes from
 [HyprYou](https://github.com/koeqaife/hyprland-material-you), whose license is
@@ -76,8 +138,12 @@ Hyprland runs `hypr/start-portals.sh` at login to export its display environment
 start `hyprland-session.target` (which activates `graphical-session.target`),
 and start the desktop portal. It stops the session target at shutdown.
 This Fedora installation does not ship a built-in `hyprland-session.target`;
-the saved user target supplies it. The GTK portal provides the file picker,
-allowing sandboxed apps such as Telegram to select real home-directory files.
+the saved user target supplies it. File dialogs are routed to the KDE portal by
+`.config/xdg-desktop-portal/hyprland-portals.conf`, which gives the Dolphin-style
+chooser with a shared Places sidebar; screencopy stays with the Hyprland portal
+and `org.freedesktop.impl.portal.Settings` stays with GTK so apps still read
+"prefer dark". Sandboxed apps such as Telegram can still select real
+home-directory files.
 To apply this to an existing session, run `sh ~/.config/hypr/start-portals.sh`
 after `daemon-reload`, then fully quit and reopen Telegram.
 If a future Hyprland package supplies automatic systemd session management,
@@ -114,7 +180,7 @@ connection. Its menu provides settings, password entry and a confirmed Forget
 action. Passwords are passed to NetworkManager through standard input, never
 saved in these dotfiles. Existing profiles and credentials stay in NetworkManager.
 
-## Material You polish
+## Panel and notifications
 
 The notification button (or Super+N) opens the themed SwayNotificationCenter:
 quick access to connections, Bluetooth, lock and power; volume with optional
@@ -122,9 +188,12 @@ per-app controls; laptop brightness; and media artwork when a player is active.
 Its configuration and CSS are mirrored under `.config/swaync/`.
 The stylesheet extends `/etc/xdg/swaync/style.css` (SwayNC 0.12.6).
 
-The bar groups sound/brightness and connectivity into tonal capsules. The laptop
-bar omits CPU/RAM readouts to fit the scaled screen; the external bar retains them.
-Waybar's MPRIS module shows actual track information only when a player is available.
+Both bars are now identical -- same height (28), same modules -- so the laptop no
+longer runs a reduced set. The brightness and volume modules are hidden; their
+definitions remain in `config.jsonc` and can be restored by re-adding the module
+name to `modules-right`. MPRIS is an icon-only transport button: it shows a pause
+glyph while playing, a play glyph when paused, and hides itself when no player is
+running. Click toggles, right-click skips, scroll moves between tracks.
 The application button opens Fuzzel; existing keyboard shortcuts stay the same.
 Restore `.config/swaync/` alongside the other configs and reload SwayNC with
 `swaync-client -R` and `swaync-client -rs`.
@@ -144,16 +213,18 @@ notifications. Expired popups remain in the notification center (Super+N).
 Hovering pauses the popup timer; leaving starts it again. Applications that
 explicitly request a positive expiration time override SwayNC's defaults.
 
-## Laptop layout — Lavender Dunes
+## Laptop layout
 
-The laptop uses a 1600×900 logical desktop at 120% scale.
-Floating surfaces group workspaces and essential status; the central clock
-stays clear. The notification button opens Wi-Fi, Bluetooth, brightness and
-media controls; sound and battery remain directly visible beside CPU temperature.
-The external display retains its fuller status layout at 100% scale.
+The laptop uses a 1600×900 logical desktop at 120% scale. The flat bar fits the
+full module set at that width, which the previous rounded capsules could not --
+removing the pill padding recovered roughly 40% of the horizontal space. The
+external display runs the same bar at 100% scale.
 
-The original vector wallpaper is `hypr/wallpapers/lavender-dunes.svg`; its PNG
-render is used by swaybg and Hyprlock. The wallpaper is run by the systemd user
+The wallpaper is named by `theme/palette.toml` and resolved into
+`hypr/theme-wallpaper`, which both `start-wallpaper.sh` and Hyprlock's
+`$wallpaper` read -- so desktop and lock screen always agree. The original vector
+wallpaper `hypr/wallpapers/lavender-dunes.svg` is retained as the fallback used
+when a palette declares none. The wallpaper is run by the systemd user
 unit `hypr-wallpaper.service`, started by `hypr/start-panel.sh`, and stopped
 with the Hyprland session. After restoring run `systemctl --user daemon-reload`
 and `systemctl --user start hypr-wallpaper.service` inside Hyprland.

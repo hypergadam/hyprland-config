@@ -1,0 +1,110 @@
+# ============================================================================
+# Single source of truth for desktop colour.
+#
+# Nothing else should contain a raw hex value. Edit this file, run
+# `theme-apply`, and every component is regenerated.
+#
+#   palette   the raw named colours of the theme. Swap this block (and the
+#             three mapping blocks below) to change theme wholesale.
+#   roles     semantic UI names -> palette keys
+#   terminal  the 16 ANSI slots -> palette keys
+#   extra     odds and ends that aren't surfaces
+#
+# Renderers only ever read roles/terminal/extra, never palette keys directly,
+# so any palette works as long as the three mapping blocks are filled in.
+# ============================================================================
+
+name = "Akane"
+wallpaper = "2-akane.jpg"
+
+# --- Akane (茜) -- madder red. Palette verbatim from the upstream theme:
+# github.com/Grenish/omarchy-akane-theme @ bfe2285 (colors.toml)
+# "vermillion torii and maple, sunset gold, pine moss, lake teal, dusk navy"
+[palette]
+accent             = "#e15a48"   # madder / vermillion -- the torii
+selection          = "#2c2438"
+muted              = "#6d5a68"
+
+background         = "#12101c"   # dusk navy
+dark_background    = "#0c0a14"
+darker_background  = "#08070e"
+lighter_background = "#221c2c"
+
+foreground         = "#f0c4a8"   # sunset glow -- warm, not grey
+dark_foreground    = "#8a6e6c"
+light_foreground   = "#f3d0b8"
+bright_foreground  = "#f7e0cc"
+
+red                = "#d6453d"
+yellow             = "#f0b45a"   # sunset gold
+orange             = "#e87a42"
+green              = "#7e9a6a"   # pine moss
+cyan               = "#4a9bb0"   # lake teal
+blue               = "#5b7fa8"
+magenta            = "#c45c78"
+brown              = "#6b3a2a"
+
+bright_red         = "#f06a58"
+bright_yellow      = "#f6cc7a"
+bright_green       = "#9ab57e"
+bright_cyan        = "#7ec4d2"
+bright_blue        = "#7a9cc4"
+bright_magenta     = "#e07a94"
+
+# --- Semantic UI roles ------------------------------------------------------
+# Upstream sets the active border to accent -> yellow at 45deg; accent_dim
+# is what closes that gradient, so this reproduces it exactly.
+[roles]
+accent           = "accent"              # borders, active workspace, launcher
+accent_dim       = "yellow"              # second stop of the border gradient
+accent_text      = "darker_background"   # text drawn ON an accent fill
+
+bg               = "background"
+bg_dim           = "dark_background"
+bg_deep          = "darker_background"
+bg_raised        = "lighter_background"
+bg_selected      = "selection"
+
+fg               = "foreground"
+fg_muted         = "dark_foreground"
+fg_disabled      = "muted"
+outline          = "lighter_background"
+outline_inactive = "selection"           # upstream inactive border
+
+error            = "red"
+warning          = "yellow"
+success          = "green"
+info             = "blue"
+
+# --- Terminal: the 16 ANSI slots (verbatim from upstream alacritty.toml) ----
+[terminal]
+black          = "background"
+red            = "red"
+green          = "green"
+yellow         = "yellow"
+blue           = "blue"
+magenta        = "magenta"
+cyan           = "cyan"
+white          = "foreground"
+bright_black   = "muted"
+bright_red     = "bright_red"
+bright_green   = "bright_green"
+bright_yellow  = "bright_yellow"
+bright_blue    = "bright_blue"
+bright_magenta = "bright_magenta"
+bright_cyan    = "bright_cyan"
+bright_white   = "bright_foreground"
+
+# --- Everything else --------------------------------------------------------
+[extra]
+cursor       = "bright_foreground"   # upstream alacritty cursor
+link_visited = "magenta"
+
+# --- Per-surface opacity ----------------------------------------------------
+# ee / aa reproduce upstream's rgba(e15a48ee) and rgba(2c2438aa) exactly.
+[opacity]
+border_active   = "ee"
+border_inactive = "aa"
+panel           = "f2"
+launcher        = "fa"
+terminal        = 0.95

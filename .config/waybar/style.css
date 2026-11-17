@@ -1,53 +1,95 @@
-/* Lavender Dunes — restrained floating surfaces, scaled for the laptop. */
+/* Waybar - omarchy-style flat bar.
+ * Colours come from ~/.config/theme/palette.toml via `theme-apply`.
+ * Omarchy's language: no pills, no radius, solid ground, separation by
+ * margin. The solid background is deliberate -- a transparent bar over a
+ * bright wallpaper is what washed the old pills out. */
+@import url("colors.css");
+
 * {
-  font-family: "Noto Sans", "Symbols Nerd Font Mono", sans-serif;
-  font-size: 12px; min-height: 0;
-  transition: background-color 160ms ease, color 160ms ease;
+  font-family: "JetBrains Mono", "Symbols Nerd Font Mono", "Noto Sans", sans-serif;
+  font-size: 12px;
+  min-height: 0;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  transition: color 140ms ease;
 }
-window#waybar { background: transparent; color: #e6e0ef; }
-.modules-left, .modules-center, .modules-right { padding: 2px 0; }
-#workspaces, #system, #controls, #connectivity, #status, #clock, #mpris, #tray,
-#custom-launcher, #custom-power, #battery, #custom-notifications, #temperature {
-  background: rgba(29, 29, 46, 0.95); border-radius: 16px;
-  border: 1px solid rgba(187, 177, 216, 0.16);
-  margin: 1px 0; padding: 0 10px;
+
+window#waybar {
+  background: @bg;
+  color: @fg;
+  border-bottom: 1px solid @outline;
 }
-#workspaces { padding: 0 5px; }
+
+.modules-left  { margin-left: 6px; }
+.modules-right { margin-right: 6px; }
+
+/* ── launcher ─────────────────────────────────────────── */
+#custom-launcher {
+  color: @accent;
+  font-size: 15px;
+  margin: 0 12px 0 4px;
+}
+#custom-launcher:hover { color: @accent_dim; }
+
+/* ── workspaces: bare numerals, omarchy-style ─────────── */
 .workspace-button {
-  color: #a9a4bc; border-radius: 12px; padding: 0 8px; margin: 4px 1px;
-  min-width: 13px; border: none; box-shadow: none;
+  color: @bar_idle;
+  padding: 0 6px;
+  margin: 0 1px;
+  min-width: 9px;
+  background: transparent;
 }
-.workspace-button.active { background: #c4b5ed; color: #2b2541; font-weight: 700; }
-.workspace-button:hover { background: #48405e; color: #eee5ff; }
-#custom-launcher { background: #c4b5ed; color: #29223c; padding: 0 12px; font-size: 19px; }
-#custom-launcher:hover { background: #e2d5ff; }
-#clock { color: #f0e9fa; font-weight: 700; padding: 0 18px; }
-#mpris { color: #d3c5e7; font-size: 11px; }
-#mpris.paused { color: #a39cb5; }
-#mpris:hover, #custom-power:hover { background: #3b334f; }
-#custom-power { color: #e6b9c8; padding: 0 12px; }
-#system, #controls, #connectivity, #status { padding: 0 6px; }
-#cpu, #memory, #backlight, #wireplumber, #network, #bluetooth { padding: 0 8px; }
-#system #temperature, #status #temperature, #status #battery, #status #custom-notifications {
-  background: transparent; border: none; margin: 0; padding: 0 9px;
+.workspace-button.active { color: @accent; font-weight: 700; }
+.workspace-button:hover  { color: @fg; }
+
+/* ── transport button ─────────────────────────────────── */
+/* Icon-only play/pause. Accent while playing so it reads as live;
+   recedes when paused. Hides itself when no player is running. */
+#mpris {
+  color: @accent;
+  margin: 0 10px;
+  padding: 0 4px;
+  font-size: 13px;
 }
-#temperature { color: #bcd7bc; }
-#temperature.warning { color: #f5d1a5; }
-#temperature.critical, #system #temperature.critical, #status #temperature.critical {
-  color: #ffdad6; background: #8b3344;
+#mpris.paused  { color: @bar_idle; }
+#mpris.stopped { color: @bar_idle; }
+#mpris:hover   { color: @fg; }
+
+/* ── clock ────────────────────────────────────────────── */
+#clock { color: @fg; font-weight: 700; }
+
+/* ── readouts: margin-separated, not boxed ────────────── */
+#cpu, #memory, #temperature, #backlight,
+#wireplumber, #network, #bluetooth, #battery {
+  color: @bar_value;
+  margin: 0 7px;
 }
-#battery { color: #d3c5e7; }
-#battery.charging { color: #bcd7bc; }
-#battery.warning { color: #f5d1a5; }
-#battery.critical:not(.charging), #status #battery.critical:not(.charging) { background: #8b3344; color: #ffdad6; }
-#wireplumber { color: #c4b5ed; }
-#wireplumber.muted { color: #90899e; }
-#network, #bluetooth, #backlight { color: #bfb7d4; }
-#custom-notifications { color: #e6b9c8; }
-#custom-notifications:hover, #status #custom-notifications:hover { background: #493747; }
-#tray { padding: 0 8px; }
-tooltip { background: #232034; border: 1px solid #4b435e; border-radius: 16px; }
-tooltip label { color: #e6e0ef; padding: 10px; }
-window#waybar.laptop .workspace-button { padding: 0 7px; }
-window#waybar.laptop #clock { font-size: 14px; letter-spacing: 1px; padding: 0 20px; }
-window#waybar.laptop #status { padding: 0 4px; }
+#cpu:hover, #memory:hover, #temperature:hover, #backlight:hover,
+#wireplumber:hover, #network:hover, #bluetooth:hover, #battery:hover {
+  color: @fg;
+}
+
+/* state is colour, so it reads at a glance without a badge */
+#temperature.warning, #battery.warning { color: @warning; }
+#temperature.critical, #battery.critical { color: @error; }
+#battery.charging { color: @success; }
+#wireplumber.muted { color: @bar_idle; }
+#network.disconnected { color: @error; }
+
+#custom-notifications { color: @bar_value; margin: 0 7px; }
+#custom-notifications:hover { color: @accent; }
+
+#tray { margin: 0 8px; }
+#tray menu { background: @bg_dim; color: @fg; border: 1px solid @outline; }
+
+#custom-power { color: @error; margin: 0 6px 0 8px; }
+#custom-power:hover { color: @accent; }
+
+/* ── tooltips ─────────────────────────────────────────── */
+tooltip {
+  background: @bg_dim;
+  border: 1px solid @outline;
+  border-radius: 6px;
+}
+tooltip label { color: @fg; padding: 6px 8px; }

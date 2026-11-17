@@ -1,9 +1,21 @@
+// Waybar - omarchy-style flat bar, identical on both outputs.
+// Colours live in colors.css, generated from ~/.config/theme/palette.toml.
+// Module definitions (formats, tooltips, click actions) are unchanged.
+// Hidden modules: backlight, wireplumber. Their definitions are
+// kept below -- re-add the name to modules-left/right to restore.
+// mpris is icon-only: a transport button, no track title.
 [
   {
+    "name": "desktop",
+    "output": "HDMI-A-1",
     "layer": "top",
     "position": "top",
-    "height": 42,
-    "spacing": 4,
+    "height": 28,
+    "spacing": 0,
+    "margin-top": 0,
+    "margin-left": 0,
+    "margin-right": 0,
+    "margin-bottom": 0,
     "modules-left": [
       "custom/launcher",
       "group/workspaces",
@@ -13,14 +25,26 @@
       "clock"
     ],
     "modules-right": [
-      "group/system",
-      "group/controls",
-      "group/connectivity",
+      "cpu",
+      "memory",
+      "temperature",
+      "network",
+      "bluetooth",
       "battery",
       "custom/notifications",
       "tray",
       "custom/power"
     ],
+    "group/workspaces": {
+      "orientation": "horizontal",
+      "modules": [
+        "custom/workspace1",
+        "custom/workspace2",
+        "custom/workspace3",
+        "custom/workspace4",
+        "custom/workspace5"
+      ]
+    },
     "cpu": {
       "interval": 3,
       "format": "  {usage}%",
@@ -101,7 +125,50 @@
       "icon-size": 18,
       "spacing": 10
     },
-    "output": "HDMI-A-1",
+    "custom/power": {
+      "format": "",
+      "tooltip-format": "Power: sleep, restart, or shut down",
+      "on-click": "sh ~/.config/hypr/power-menu.sh"
+    },
+    "backlight": {
+      "device": "amdgpu_bl1",
+      "format": "  {percent}%",
+      "tooltip-format": "Laptop screen brightness: {percent}%\nLeft-click / scroll up: brighter (+5%)\nRight-click / scroll down: dimmer (-5%)",
+      "on-scroll-up": "brightnessctl -d amdgpu_bl1 set +5%",
+      "on-scroll-down": "brightnessctl -d amdgpu_bl1 --min-value=3277 set 5%-",
+      "on-click": "brightnessctl -d amdgpu_bl1 set +5%",
+      "on-click-right": "brightnessctl -d amdgpu_bl1 --min-value=3277 set 5%-"
+    },
+    "custom/launcher": {
+      "format": "",
+      "tooltip-format": "Fedora · Applications · Super+Space",
+      "on-click": "fuzzel"
+    },
+    "mpris": {
+      "format": "{status_icon}",
+      "format-paused": "{status_icon}",
+      "format-stopped": "",
+      "status-icons": {
+        "playing": "",
+        "paused": "",
+        "stopped": ""
+      },
+      "tooltip-format": "{title}\n{artist}\nClick: play/pause · Right-click: next · Scroll: prev/next",
+      "on-click": "playerctl play-pause",
+      "on-click-right": "playerctl next",
+      "on-scroll-up": "playerctl next",
+      "on-scroll-down": "playerctl previous",
+      "interval": 1
+    },
+    "temperature": {
+      "hwmon-path-abs": "/sys/devices/pci0000:00/0000:00:18.3/hwmon",
+      "input-filename": "temp1_input",
+      "interval": 5,
+      "format": "  {temperatureC}°C",
+      "tooltip-format": "CPU temperature (AMD Tctl): {temperatureC}°C",
+      "warning-threshold": 80,
+      "critical-threshold": 95
+    },
     "custom/workspace1": {
       "exec": "cat \"${XDG_STATE_HOME:-$HOME/.local/state}/hypr-panel/workspaces/1.json\" 2>/dev/null || printf '%s\\n' '{\"text\": \"1\", \"class\": [\"workspace-button\"]}'",
       "return-type": "json",
@@ -131,94 +198,19 @@
       "return-type": "json",
       "signal": 8,
       "on-click": "hyprctl eval 'hl.dispatch(hl.dsp.focus({ workspace = \"5\" }))'"
-    },
-    "custom/power": {
-      "format": "",
-      "tooltip-format": "Power: sleep, restart, or shut down",
-      "on-click": "sh ~/.config/hypr/power-menu.sh"
-    },
-    "backlight": {
-      "device": "amdgpu_bl1",
-      "format": "  {percent}%",
-      "tooltip-format": "Laptop screen brightness: {percent}%\nLeft-click / scroll up: brighter (+5%)\nRight-click / scroll down: dimmer (-5%)",
-      "on-scroll-up": "brightnessctl -d amdgpu_bl1 set +5%",
-      "on-scroll-down": "brightnessctl -d amdgpu_bl1 --min-value=3277 set 5%-",
-      "on-click": "brightnessctl -d amdgpu_bl1 set +5%",
-      "on-click-right": "brightnessctl -d amdgpu_bl1 --min-value=3277 set 5%-"
-    },
-    "margin-top": 10,
-    "margin-left": 12,
-    "margin-right": 12,
-    "margin-bottom": 0,
-    "custom/launcher": {
-      "format": "",
-      "tooltip-format": "Fedora · Applications · Super+Space",
-      "on-click": "fuzzel"
-    },
-    "group/system": {
-      "orientation": "horizontal",
-      "modules": [
-        "cpu",
-        "memory",
-        "temperature"
-      ]
-    },
-    "group/controls": {
-      "orientation": "horizontal",
-      "modules": [
-        "backlight",
-        "wireplumber"
-      ]
-    },
-    "group/connectivity": {
-      "orientation": "horizontal",
-      "modules": [
-        "network",
-        "bluetooth"
-      ]
-    },
-    "mpris": {
-      "format": "{player_icon}  {dynamic}",
-      "format-paused": "{status_icon}  {dynamic}",
-      "player-icons": {
-        "default": "",
-        "spotify": "",
-        "firefox": ""
-      },
-      "status-icons": {
-        "paused": ""
-      },
-      "dynamic-len": 22,
-      "tooltip-format": "{title}\n{artist}\nClick: play/pause · Right-click: next",
-      "on-click": "playerctl play-pause",
-      "on-click-right": "playerctl next"
-    },
-    "temperature": {
-      "hwmon-path-abs": "/sys/devices/pci0000:00/0000:00:18.3/hwmon",
-      "input-filename": "temp1_input",
-      "interval": 5,
-      "format": "  {temperatureC}°C",
-      "tooltip-format": "CPU temperature (AMD Tctl): {temperatureC}°C",
-      "warning-threshold": 80,
-      "critical-threshold": 95
-    },
-    "name": "desktop",
-    "group/workspaces": {
-      "orientation": "horizontal",
-      "modules": [
-        "custom/workspace1",
-        "custom/workspace2",
-        "custom/workspace3",
-        "custom/workspace4",
-        "custom/workspace5"
-      ]
     }
   },
   {
+    "name": "laptop",
+    "output": "eDP-1",
     "layer": "top",
     "position": "top",
-    "height": 38,
-    "spacing": 4,
+    "height": 28,
+    "spacing": 0,
+    "margin-top": 0,
+    "margin-left": 0,
+    "margin-right": 0,
+    "margin-bottom": 0,
     "modules-left": [
       "custom/launcher",
       "group/workspaces",
@@ -228,9 +220,26 @@
       "clock"
     ],
     "modules-right": [
-      "group/status",
+      "cpu",
+      "memory",
+      "temperature",
+      "network",
+      "bluetooth",
+      "battery",
+      "custom/notifications",
+      "tray",
       "custom/power"
     ],
+    "group/workspaces": {
+      "orientation": "horizontal",
+      "modules": [
+        "custom/workspace6",
+        "custom/workspace7",
+        "custom/workspace8",
+        "custom/workspace9",
+        "custom/workspace10"
+      ]
+    },
     "cpu": {
       "interval": 3,
       "format": "  {usage}%",
@@ -242,13 +251,13 @@
       "tooltip-format": "{used:.1f} / {total:.1f} GiB used"
     },
     "wireplumber": {
-      "format": "{icon}",
+      "format": "{icon}  {volume}%",
       "format-icons": [
         "",
         "",
         ""
       ],
-      "format-muted": "",
+      "format-muted": "  Muted",
       "scroll-step": 5,
       "max-volume": 100,
       "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
@@ -256,7 +265,7 @@
       "tooltip-format": "{node_name}\nScroll: volume · Click: mute · Right-click: sound settings"
     },
     "clock": {
-      "format": "{:%H:%M}",
+      "format": "{:%a, %d %b  ·  %H:%M}",
       "tooltip-format": "{:%A, %d %B %Y}\n{calendar}",
       "calendar": {
         "mode": "month",
@@ -265,8 +274,8 @@
       }
     },
     "network": {
-      "format-wifi": "",
-      "format-ethernet": "",
+      "format-wifi": "  {signalStrength}%",
+      "format-ethernet": "  Online",
       "format-linked": "",
       "format-disconnected": "",
       "tooltip-format": "{essid}\n{ifname}: {ipaddr}\nClick: connection manager · Right-click: advanced settings",
@@ -304,14 +313,57 @@
     },
     "custom/notifications": {
       "format": "",
-      "tooltip-format": "Control center · Super+N\nWi-Fi, Bluetooth, brightness and notifications",
+      "tooltip-format": "Click to open notifications · Super+N",
       "on-click": "swaync-client -t"
     },
     "tray": {
       "icon-size": 18,
       "spacing": 10
     },
-    "output": "eDP-1",
+    "custom/power": {
+      "format": "",
+      "tooltip-format": "Power: sleep, restart, or shut down",
+      "on-click": "sh ~/.config/hypr/power-menu.sh"
+    },
+    "backlight": {
+      "device": "amdgpu_bl1",
+      "format": "  {percent}%",
+      "tooltip-format": "Laptop screen brightness: {percent}%\nLeft-click / scroll up: brighter (+5%)\nRight-click / scroll down: dimmer (-5%)",
+      "on-scroll-up": "brightnessctl -d amdgpu_bl1 set +5%",
+      "on-scroll-down": "brightnessctl -d amdgpu_bl1 --min-value=3277 set 5%-",
+      "on-click": "brightnessctl -d amdgpu_bl1 set +5%",
+      "on-click-right": "brightnessctl -d amdgpu_bl1 --min-value=3277 set 5%-"
+    },
+    "custom/launcher": {
+      "format": "",
+      "tooltip-format": "Fedora · Applications · Super+Space",
+      "on-click": "fuzzel"
+    },
+    "mpris": {
+      "format": "{status_icon}",
+      "format-paused": "{status_icon}",
+      "format-stopped": "",
+      "status-icons": {
+        "playing": "",
+        "paused": "",
+        "stopped": ""
+      },
+      "tooltip-format": "{title}\n{artist}\nClick: play/pause · Right-click: next · Scroll: prev/next",
+      "on-click": "playerctl play-pause",
+      "on-click-right": "playerctl next",
+      "on-scroll-up": "playerctl next",
+      "on-scroll-down": "playerctl previous",
+      "interval": 1
+    },
+    "temperature": {
+      "hwmon-path-abs": "/sys/devices/pci0000:00/0000:00:18.3/hwmon",
+      "input-filename": "temp1_input",
+      "interval": 5,
+      "format": "  {temperatureC}°C",
+      "tooltip-format": "CPU temperature (AMD Tctl): {temperatureC}°C",
+      "warning-threshold": 80,
+      "critical-threshold": 95
+    },
     "custom/workspace6": {
       "exec": "cat \"${XDG_STATE_HOME:-$HOME/.local/state}/hypr-panel/workspaces/6.json\" 2>/dev/null || printf '%s\\n' '{\"text\": \"6\", \"class\": [\"workspace-button\"]}'",
       "return-type": "json",
@@ -341,95 +393,6 @@
       "return-type": "json",
       "signal": 8,
       "on-click": "hyprctl eval 'hl.dispatch(hl.dsp.focus({ workspace = \"10\" }))'"
-    },
-    "custom/power": {
-      "format": "",
-      "tooltip-format": "Power: sleep, restart, or shut down",
-      "on-click": "sh ~/.config/hypr/power-menu.sh"
-    },
-    "backlight": {
-      "device": "amdgpu_bl1",
-      "format": "",
-      "tooltip-format": "Laptop screen brightness: {percent}%\nLeft-click / scroll up: brighter (+5%)\nRight-click / scroll down: dimmer (-5%)",
-      "on-scroll-up": "brightnessctl -d amdgpu_bl1 set +5%",
-      "on-scroll-down": "brightnessctl -d amdgpu_bl1 --min-value=3277 set 5%-",
-      "on-click": "brightnessctl -d amdgpu_bl1 set +5%",
-      "on-click-right": "brightnessctl -d amdgpu_bl1 --min-value=3277 set 5%-"
-    },
-    "margin-top": 10,
-    "margin-left": 12,
-    "margin-right": 12,
-    "margin-bottom": 0,
-    "custom/launcher": {
-      "format": "",
-      "tooltip-format": "Fedora · Applications · Super+Space",
-      "on-click": "fuzzel"
-    },
-    "group/system": {
-      "orientation": "horizontal",
-      "modules": [
-        "cpu",
-        "memory"
-      ]
-    },
-    "group/controls": {
-      "orientation": "horizontal",
-      "modules": [
-        "backlight",
-        "wireplumber"
-      ]
-    },
-    "group/connectivity": {
-      "orientation": "horizontal",
-      "modules": [
-        "network",
-        "bluetooth"
-      ]
-    },
-    "mpris": {
-      "format": "{player_icon}  {dynamic}",
-      "format-paused": "{status_icon}  {dynamic}",
-      "player-icons": {
-        "default": "",
-        "spotify": "",
-        "firefox": ""
-      },
-      "status-icons": {
-        "paused": ""
-      },
-      "dynamic-len": 18,
-      "tooltip-format": "{title}\n{artist}\nClick: play/pause · Right-click: next",
-      "on-click": "playerctl play-pause",
-      "on-click-right": "playerctl next"
-    },
-    "temperature": {
-      "hwmon-path-abs": "/sys/devices/pci0000:00/0000:00:18.3/hwmon",
-      "input-filename": "temp1_input",
-      "interval": 5,
-      "format": "  {temperatureC}°C",
-      "tooltip-format": "CPU temperature (AMD Tctl): {temperatureC}°C",
-      "warning-threshold": 80,
-      "critical-threshold": 95
-    },
-    "name": "laptop",
-    "group/workspaces": {
-      "orientation": "horizontal",
-      "modules": [
-        "custom/workspace6",
-        "custom/workspace7",
-        "custom/workspace8",
-        "custom/workspace9",
-        "custom/workspace10"
-      ]
-    },
-    "group/status": {
-      "orientation": "horizontal",
-      "modules": [
-        "temperature",
-        "wireplumber",
-        "battery",
-        "custom/notifications"
-      ]
     }
   }
 ]

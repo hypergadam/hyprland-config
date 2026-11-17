@@ -1,0 +1,10 @@
+/* Breeze-Dark's gtk.css references ~800 @*_breeze color variables but does not
+ * define them. They come from colors.css, which colorreload-gtk-module
+ * regenerates from the active KDE color scheme. Without this import the theme
+ * renders with undefined colors. */
+@import 'colors.css';
+
+/* Breeze-Dark aliases this one but the generated colors.css never defines it.
+ * Kept here, not in colors.css, so a colorreload regeneration can't drop it.
+ * Semantics: insensitive foreground in an unfocused window. */
+@define-color unfocused_insensitive_color_breeze #686a6c;
