@@ -189,14 +189,51 @@ Its configuration and CSS are mirrored under `.config/swaync/`.
 The stylesheet extends `/etc/xdg/swaync/style.css` (SwayNC 0.12.6).
 
 Both bars are now identical -- same height (28), same modules -- so the laptop no
-longer runs a reduced set. The brightness and volume modules are hidden; their
-definitions remain in `config.jsonc` and can be restored by re-adding the module
-name to `modules-right`. MPRIS is an icon-only transport button: it shows a pause
+longer runs a reduced set. Volume shows as `{icon} {volume}%`: scroll to adjust
+in 5% steps, click to mute, right-click for sound settings. The brightness module
+is hidden; its definition remains in `config.jsonc` and can be restored by
+re-adding the name to `modules-right`. MPRIS is an icon-only transport button: it shows a pause
 glyph while playing, a play glyph when paused, and hides itself when no player is
 running. Click toggles, right-click skips, scroll moves between tracks.
 The application button opens Fuzzel; existing keyboard shortcuts stay the same.
 Restore `.config/swaync/` alongside the other configs and reload SwayNC with
 `swaync-client -R` and `swaync-client -rs`.
+
+## Lock, idle and sleep
+
+**Super+L** runs `hypr/lock.sh`, which locks the session and then blanks the
+displays. Any input wakes them -- Hyprland re-enables DPMS on activity.
+
+The script goes through `loginctl lock-session` rather than calling `hyprlock`
+directly, so the lock, the sleep hook and any idle timeout all run the same
+code path. `hypridle` provides that path and must be running:
+
+```sh
+systemctl --user enable --now hypridle.service
+```
+
+Its unit ships with the `hypridle` package and is bound to
+`graphical-session.target`, which `hyprland-session.target` activates.
+
+`hypr/hypridle.conf` sets `before_sleep_cmd = loginctl lock-session`, so the
+machine locks *before* suspending and never resumes onto an unlocked desktop --
+this is what was missing when sleep did not appear to shut the UI down.
+hypridle holds a sleep inhibitor until it observes the Wayland session lock
+(via `ext-session-lock`, not `LockedHint`, which hyprlock does not set), then
+releases it so suspend proceeds. `after_sleep_cmd` re-enables DPMS on resume.
+
+Idle timeouts (lock, blank, suspend) are present in the config but commented
+out; uncomment a `listener` block to enable one.
+
+Note the dispatcher syntax. This configuration uses Hyprland's Lua API, where
+`hyprctl dispatch dpms off` is parsed as Lua and fails. The working form is:
+
+```sh
+hyprctl dispatch 'hl.dsp.dpms("off")'
+```
+
+`hl.dsp.dpms("off")` on its own only *builds* a dispatcher object; `hyprctl
+dispatch` is what wraps it in `hl.dispatch(...)` and executes it.
 
 ## CPU temperature
 

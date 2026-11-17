@@ -22,6 +22,8 @@ set -- \
     hypr/launch-apidog.sh \
     hypr/power-menu.sh \
     hypr/screenshot.sh \
+    hypr/lock.sh \
+    hypr/hypridle.conf \
     \
     `# ---- theme system (SOURCE of truth) ----` \
     theme/palette.toml \

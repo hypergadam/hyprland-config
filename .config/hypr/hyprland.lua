@@ -340,7 +340,9 @@ local mainMod = "SUPER" -- Sets "Windows" key as main modifier
 
 hl.bind(mainMod .. " + N", hl.dsp.exec_cmd("swaync-client -t"))
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("blueman-manager"))
-hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("hyprlock"))
+-- Lock and blank the displays. See hypr/lock.sh; it routes through
+-- loginctl so Super+L, suspend and idle all lock the same way.
+hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("sh ~/.config/hypr/lock.sh"))
 hl.bind(mainMod .. " + SHIFT + N", hl.dsp.exec_cmd("python3 ~/.config/hypr/connections.py"))
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen({ mode = "fullscreen", action = "toggle" }))
 hl.bind("Print", hl.dsp.exec_cmd("sh ~/.config/hypr/screenshot.sh region"))
