@@ -2,10 +2,11 @@
 # Copy the live desktop configuration into this repository.
 #
 # Layout note: colour is generated. ~/.config/theme/palette.toml is the single
-# source of truth and `theme-apply` renders every *colors* file listed under
-# GENERATED below. Those are committed anyway so a fresh clone works before
-# theme-apply has ever been run -- hyprland.lua does require("theme"), and
-# Hyprland will not start if hypr/theme.lua is absent.
+# source of truth and `theme-apply` renders every file listed under GENERATED
+# below -- including shell-colors.sh and the bat/btop/zellij themes, plus the
+# [palettes.theme] block inside starship.toml. Those are committed anyway so a
+# fresh clone works before theme-apply has ever been run -- hyprland.lua does
+# require("theme"), and Hyprland will not start if hypr/theme.lua is absent.
 set -eu
 repo_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 config_dir=${XDG_CONFIG_HOME:-$HOME/.config}
@@ -44,6 +45,10 @@ set -- \
     wezterm/colors/palette.toml \
     gtk-3.0/colors.css \
     gtk-4.0/colors.css \
+    theme/shell-colors.sh \
+    bat/themes/Palette.tmTheme \
+    btop/themes/palette.theme \
+    zellij/themes/palette.kdl \
     \
     `# ---- panel + launcher + notifications ----` \
     waybar/config.jsonc \
@@ -56,6 +61,12 @@ set -- \
     `# ---- terminals ----` \
     wezterm/wezterm.lua \
     kitty/kitty.conf \
+    \
+    `# ---- shell, prompt + CLI tools ----` \
+    starship.toml \
+    bat/config \
+    btop/btop.conf \
+    zellij/config.kdl \
     \
     `# ---- toolkit theming (GTK + Qt/KDE + portals) ----` \
     gtk-3.0/settings.ini \
@@ -114,6 +125,19 @@ do
     [ -n "$name" ] || continue
     scheme="$data_dir/color-schemes/$name.colors"
     [ -f "$scheme" ] && cp -p -- "$scheme" "$repo_dir/.local/share/color-schemes/"
+done
+
+# Home dotfiles live outside $config_dir but are part of this configuration:
+# .zshrc is what sources theme/shell-colors.sh and starts starship, so a clone
+# without it gets a themed prompt that nothing ever loads.
+home_files='.zshrc'
+for relative in $home_files
+do
+    if [ ! -f "$HOME/$relative" ]; then
+        printf 'Missing home dotfile: %s\n' "$HOME/$relative" >&2
+        exit 1
+    fi
+    cp -p -- "$HOME/$relative" "$repo_dir/$relative"
 done
 
 printf 'Copied %s configuration files into %s\n' "$#" "$repo_dir"

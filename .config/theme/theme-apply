@@ -17,6 +17,11 @@ overwritten -- they just reference the generated tokens.
   kitty     include current-theme   -> kitty/current-theme.conf
   gtk3/4    @import 'colors.css'    -> gtk-{3,4}.0/colors.css
   qt/kde    ColorScheme=            -> color-schemes/Theme.colors
+  zellij    theme "palette"         -> zellij/themes/palette.kdl
+  btop      color_theme =           -> btop/themes/palette.theme
+  bat       --theme in bat/config   -> bat/themes/Palette.tmTheme
+  fzf/eza   source in .zshrc        -> theme/shell-colors.sh
+  starship  (no include of its own) -> a block in starship.toml
 
 Usage:  theme-apply [--no-reload] [--dry-run]
 """
@@ -128,6 +133,36 @@ def write(path: Path, content: str, dry: bool) -> None:
         return
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content)
+    WRITTEN.append(path)
+
+
+def write_region(path: Path, tag: str, body: str, dry: bool) -> None:
+    """
+    Replace a delimited region inside a config we do NOT otherwise own.
+
+    For a component with no include mechanism of its own, owning one clearly
+    marked block at the end of the user's config is the next best thing: the
+    hand-written part above the markers is never touched, and the generated
+    part is still obviously generated.
+    """
+    path = Path(path)
+    start, end = f"# >>> theme-apply:{tag} >>>", f"# <<< theme-apply:{tag} <<<"
+    region = f"{start}\n# {BANNER}\n{body.rstrip()}\n{end}\n"
+    old = path.read_text() if path.exists() else ""
+    if start in old and end in old:
+        head, _, rest = old.partition(start)
+        _, _, tail = rest.partition(end)
+        new = head + region + tail.lstrip("\n")
+    else:
+        new = (old.rstrip() + "\n\n" if old.strip() else "") + region
+    if new == old:
+        SKIPPED.append(path)
+        return
+    if dry:
+        WRITTEN.append(path)
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(new)
     WRITTEN.append(path)
 
 
@@ -617,6 +652,357 @@ def r_kdeglobals(t: Theme, dry: bool) -> None:
 # --------------------------------------------------------------------------
 # verification + live reload
 # --------------------------------------------------------------------------
+# --------------------------------------------------------------------------
+# shell / CLI renderers
+# --------------------------------------------------------------------------
+def _sgr(hexv: str, bg: bool = False) -> str:
+    """#rrggbb -> an SGR truecolour parameter run, e.g. 38;2;225;90;72"""
+    h = hexv.lstrip("#")
+    r, g, b = (int(h[i:i + 2], 16) for i in (0, 2, 4))
+    return f"{48 if bg else 38};2;{r};{g};{b}"
+
+
+def r_starship(t: Theme, dry: bool) -> None:
+    """
+    starship has no include directive, so it is the one component where we own
+    a delimited block inside the user's own config instead of a separate file.
+    Everything above the markers in starship.toml stays hand-editable and
+    refers to these palette names, never to a hex value.
+
+    The generated palette is always called "theme" so the `palette = "theme"`
+    line at the top of starship.toml survives a wholesale palette swap.
+    """
+    k = t.term
+    write_region(CFG / "starship.toml", "palette", f"""[palettes.theme]
+# semantic roles -- what the prompt modules reference
+accent      = "{t.hex('accent')}"
+accent_dim  = "{t.hex('accent_dim')}"
+accent_text = "{t.hex('accent_text')}"
+bg          = "{t.hex('bg')}"
+bg_dim      = "{t.hex('bg_dim')}"
+bg_raised   = "{t.hex('bg_raised')}"
+bg_selected = "{t.hex('bg_selected')}"
+fg          = "{t.hex('fg')}"
+fg_muted    = "{t.hex('fg_muted')}"
+fg_disabled = "{t.hex('fg_disabled')}"
+outline     = "{t.hex('outline')}"
+error       = "{t.hex('error')}"
+warning     = "{t.hex('warning')}"
+success     = "{t.hex('success')}"
+info        = "{t.hex('info')}"
+# the 16 ANSI slots by name, for ad-hoc use in hand-written modules
+black          = "{k['black']}"
+red            = "{k['red']}"
+green          = "{k['green']}"
+yellow         = "{k['yellow']}"
+blue           = "{k['blue']}"
+magenta        = "{k['magenta']}"
+cyan           = "{k['cyan']}"
+white          = "{k['white']}"
+bright_black   = "{k['bright_black']}"
+bright_red     = "{k['bright_red']}"
+bright_green   = "{k['bright_green']}"
+bright_yellow  = "{k['bright_yellow']}"
+bright_blue    = "{k['bright_blue']}"
+bright_magenta = "{k['bright_magenta']}"
+bright_cyan    = "{k['bright_cyan']}"
+bright_white   = "{k['bright_white']}"
+""", dry)
+
+
+def r_shell_colors(t: Theme, dry: bool) -> None:
+    """
+    The CLI tools that take colour through the environment, in one sourceable
+    file: fzf, eza, and LS_COLORS -- which also drives the zsh completion menu
+    via `zstyle ':completion:*' list-colors`.
+
+    .zshrc sources this and composes the non-colour options itself, so layout
+    preferences (fzf --height, --layout) stay hand-editable.
+    """
+    k = t.term
+
+    # fzf. bg and gutter are left at -1 so the terminal's own translucency
+    # shows through the finder instead of being painted over.
+    fzf = ",".join([
+        f"fg:{t.hex('fg_muted')}",
+        "bg:-1",
+        f"hl:{t.hex('accent')}",
+        f"fg+:{t.hex('fg')}",
+        f"bg+:{t.hex('bg_selected')}",
+        f"hl+:{t.hex('accent_dim')}",
+        f"info:{t.hex('fg_disabled')}",
+        f"border:{t.hex('outline')}",
+        f"prompt:{t.hex('accent')}",
+        f"pointer:{t.hex('accent')}",
+        f"marker:{t.hex('success')}",
+        f"spinner:{t.hex('warning')}",
+        f"header:{t.hex('info')}",
+        "gutter:-1",
+        f"label:{t.hex('fg_muted')}",
+        f"query:{t.hex('fg')}",
+    ])
+
+    # eza. Permission bits follow the usual read/write/execute = yellow/red/green
+    # convention; everything structural is dimmed so filenames carry the eye.
+    eza = ":".join([
+        f"hd=1;{_sgr(t.hex('accent'))}",          # column headers
+        f"di=1;{_sgr(t.hex('info'))}",            # directories
+        f"ex=1;{_sgr(t.hex('success'))}",         # executables
+        f"ln={_sgr(k['cyan'])}",                  # symlinks
+        f"lp={_sgr(t.hex('fg_disabled'))}",       # symlink target path
+        f"or=1;{_sgr(t.hex('error'))}",           # broken symlink
+        f"ur={_sgr(k['yellow'])}", f"uw={_sgr(k['red'])}", f"ux={_sgr(k['green'])}",
+        f"ue={_sgr(k['green'])}",
+        f"gr={_sgr(k['yellow'])}", f"gw={_sgr(k['red'])}", f"gx={_sgr(k['green'])}",
+        f"tr={_sgr(k['yellow'])}", f"tw={_sgr(k['red'])}", f"tx={_sgr(k['green'])}",
+        f"sn={_sgr(t.hex('success'))}",           # size number
+        f"sb={_sgr(t.hex('fg_disabled'))}",       # size unit
+        f"uu={_sgr(t.hex('fg_muted'))}",          # owner: you
+        f"un={_sgr(t.hex('fg_disabled'))}",       # owner: someone else
+        f"gu={_sgr(t.hex('fg_muted'))}", f"gn={_sgr(t.hex('fg_disabled'))}",
+        f"da={_sgr(t.hex('fg_muted'))}",          # dates
+        f"ga={_sgr(t.hex('success'))}",           # git: new
+        f"gm={_sgr(t.hex('warning'))}",           # git: modified
+        f"gd={_sgr(t.hex('error'))}",             # git: deleted
+        f"gv={_sgr(k['magenta'])}",               # git: renamed
+        f"gt={_sgr(k['cyan'])}",                  # git: type change
+        f"xx={_sgr(t.hex('fg_disabled'))}",       # punctuation / dashes
+    ])
+
+    # LS_COLORS, also read by the zsh completion menu.
+    groups = [
+        (t.hex("error"),  ["*.tar", "*.tgz", "*.zip", "*.gz", "*.bz2", "*.xz",
+                           "*.zst", "*.7z", "*.rar", "*.rpm", "*.deb"]),
+        (k["magenta"],    ["*.jpg", "*.jpeg", "*.png", "*.gif", "*.webp",
+                           "*.svg", "*.bmp", "*.ico", "*.tif", "*.tiff"]),
+        (k["bright_magenta"], ["*.mp4", "*.mkv", "*.webm", "*.mov", "*.avi"]),
+        (k["cyan"],       ["*.mp3", "*.flac", "*.ogg", "*.opus", "*.wav", "*.m4a"]),
+        (k["yellow"],     ["*.pdf", "*.epub", "*.md", "*.txt", "*.rst",
+                           "*.doc", "*.docx", "*.odt"]),
+        (k["bright_blue"], ["*.go", "*.py", "*.rs", "*.c", "*.h", "*.cpp",
+                            "*.js", "*.ts", "*.tsx", "*.sh", "*.zsh", "*.lua"]),
+        (t.hex("fg_disabled"), ["*.toml", "*.yaml", "*.yml", "*.json", "*.ini",
+                                "*.conf", "*.kdl", "*.lock"]),
+    ]
+    ls = [
+        "rs=0",
+        f"di=1;{_sgr(t.hex('info'))}",
+        f"ln={_sgr(k['cyan'])}",
+        "mh=00",
+        f"pi={_sgr(k['yellow'])};{_sgr(t.hex('bg_dim'), bg=True)}",
+        f"so={_sgr(k['magenta'])}",
+        f"do={_sgr(k['magenta'])}",
+        f"bd={_sgr(k['yellow'])};{_sgr(t.hex('bg_dim'), bg=True)}",
+        f"cd={_sgr(k['yellow'])};{_sgr(t.hex('bg_dim'), bg=True)}",
+        f"or=1;{_sgr(t.hex('error'))}",
+        f"mi=1;{_sgr(t.hex('error'))}",
+        f"su={_sgr(t.hex('accent_text'))};{_sgr(t.hex('error'), bg=True)}",
+        f"sg={_sgr(t.hex('accent_text'))};{_sgr(t.hex('warning'), bg=True)}",
+        "ca=0",
+        f"tw={_sgr(t.hex('success'))};{_sgr(t.hex('bg_raised'), bg=True)}",
+        f"ow=1;{_sgr(t.hex('info'))}",
+        f"st={_sgr(t.hex('info'))}",
+        f"ex=1;{_sgr(t.hex('success'))}",
+    ]
+    for colour, exts in groups:
+        ls += [f"{e}={_sgr(colour)}" for e in exts]
+
+    write(THEME_DIR / "shell-colors.sh", f"""# {BANNER}
+# Theme: {t.name}
+#
+# Sourced by ~/.zshrc. Colour only -- layout and behaviour options live there.
+
+FZF_COLORS="--color={fzf}"
+export FZF_COLORS
+
+EZA_COLORS="{eza}"
+export EZA_COLORS
+
+LS_COLORS="{':'.join(ls)}"
+export LS_COLORS
+
+# zsh-autosuggestions wants a zle highlight spec, not an SGR run.
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg={t.hex('fg_disabled')}"
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE
+""", dry)
+
+
+# bat reads Sublime .tmTheme files. scope -> role, applied in order; later
+# rules win for more specific scopes, which is how tmTheme cascading works.
+BAT_SCOPES = [
+    ("Comment",            "comment",                                      "fg_disabled", "italic"),
+    ("String",             "string, string.quoted",                        "success", ""),
+    ("Escape",             "constant.character.escape",                    "magenta", ""),
+    ("Number",             "constant.numeric",                             "bright_magenta", ""),
+    ("Built-in constant",  "constant.language",                            "magenta", ""),
+    ("Keyword",            "keyword, storage.modifier",                    "red", ""),
+    ("Control keyword",    "keyword.control",                              "accent", ""),
+    ("Operator",           "keyword.operator",                            "fg_muted", ""),
+    ("Storage type",       "storage.type",                                 "red", ""),
+    ("Function name",      "entity.name.function, support.function",       "info", ""),
+    ("Function argument",  "variable.parameter",                           "fg", ""),
+    ("Type name",          "entity.name.type, entity.name.class, support.type, support.class", "warning", ""),
+    ("Library constant",   "support.constant",                             "magenta", ""),
+    ("Variable",           "variable, variable.other",                     "fg", ""),
+    ("Language variable",  "variable.language",                            "magenta", "italic"),
+    ("Tag name",           "entity.name.tag",                              "red", ""),
+    ("Tag attribute",      "entity.other.attribute-name",                  "warning", ""),
+    ("Punctuation",        "punctuation, meta.brace",                      "fg_muted", ""),
+    ("Invalid",            "invalid",                                      "error", "bold"),
+    ("Heading",            "markup.heading, entity.name.section",          "accent", "bold"),
+    ("Bold",               "markup.bold",                                  "fg", "bold"),
+    ("Italic",             "markup.italic",                                "fg", "italic"),
+    ("Link",               "markup.underline.link, string.other.link",     "cyan", "underline"),
+    ("Raw",                "markup.raw, markup.inline.raw",                "bright_cyan", ""),
+    ("Inserted",           "markup.inserted, meta.diff.header.to-file",    "success", ""),
+    ("Deleted",            "markup.deleted, meta.diff.header.from-file",   "error", ""),
+    ("Changed",            "markup.changed",                               "warning", ""),
+    ("Diff range",         "meta.diff.range",                              "info", ""),
+]
+
+
+def r_bat(t: Theme, dry: bool) -> None:
+    """
+    bat discovers .tmTheme files under ~/.config/bat/themes and needs
+    `bat cache --build` to pick up changes (done in reload_all). bat/config
+    names the theme, so it stays hand-editable.
+    """
+    def colour(role: str) -> str:
+        return t.term[role] if role in t.term else t.hex(role)
+
+    rules = []
+    for name, scope, role, style in BAT_SCOPES:
+        extra = (f"\n\t\t\t\t<key>fontStyle</key>\n"
+                 f"\t\t\t\t<string>{style}</string>") if style else ""
+        rules.append(
+            f"\t\t<dict>\n"
+            f"\t\t\t<key>name</key>\n\t\t\t<string>{name}</string>\n"
+            f"\t\t\t<key>scope</key>\n\t\t\t<string>{scope}</string>\n"
+            f"\t\t\t<key>settings</key>\n\t\t\t<dict>\n"
+            f"\t\t\t\t<key>foreground</key>\n"
+            f"\t\t\t\t<string>{colour(role)}</string>{extra}\n"
+            f"\t\t\t</dict>\n"
+            f"\t\t</dict>"
+        )
+
+    write(CFG / "bat/themes/Palette.tmTheme", f"""<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- {BANNER} -->
+<plist version="1.0">
+<dict>
+\t<key>name</key>
+\t<string>Palette</string>
+\t<key>settings</key>
+\t<array>
+\t\t<dict>
+\t\t\t<key>settings</key>
+\t\t\t<dict>
+\t\t\t\t<key>background</key>
+\t\t\t\t<string>{t.hex('bg')}</string>
+\t\t\t\t<key>foreground</key>
+\t\t\t\t<string>{t.hex('fg')}</string>
+\t\t\t\t<key>caret</key>
+\t\t\t\t<string>{t.extra.get('cursor', t.hex('accent'))}</string>
+\t\t\t\t<key>selection</key>
+\t\t\t\t<string>{t.hex('bg_selected')}</string>
+\t\t\t\t<key>lineHighlight</key>
+\t\t\t\t<string>{t.hex('bg_raised')}</string>
+\t\t\t\t<key>gutter</key>
+\t\t\t\t<string>{t.hex('bg')}</string>
+\t\t\t\t<key>gutterForeground</key>
+\t\t\t\t<string>{t.hex('fg_disabled')}</string>
+\t\t\t\t<key>invisibles</key>
+\t\t\t\t<string>{t.hex('outline')}</string>
+\t\t\t\t<key>findHighlight</key>
+\t\t\t\t<string>{t.hex('accent')}</string>
+\t\t\t\t<key>findHighlightForeground</key>
+\t\t\t\t<string>{t.hex('accent_text')}</string>
+\t\t\t</dict>
+\t\t</dict>
+{chr(10).join(rules)}
+\t</array>
+</dict>
+</plist>
+""", dry)
+
+
+def r_zellij(t: Theme, dry: bool) -> None:
+    """
+    zellij reads named themes from ~/.config/zellij/themes/*.kdl; config.kdl
+    just names one, so it stays hand-editable. The simple palette form is used
+    rather than the per-component form -- zellij derives its whole UI from
+    these eleven slots, which is exactly what the palette already provides.
+    """
+    k = t.term
+    write(CFG / "zellij/themes/palette.kdl", f"""// {BANNER}
+// Theme: {t.name}
+themes {{
+    palette {{
+        fg "{t.hex('fg')}"
+        bg "{t.hex('bg_raised')}"
+        black "{k['black']}"
+        red "{k['red']}"
+        green "{k['green']}"
+        yellow "{k['yellow']}"
+        blue "{k['blue']}"
+        magenta "{k['magenta']}"
+        cyan "{k['cyan']}"
+        white "{k['white']}"
+        orange "{t.hex('accent')}"
+    }}
+}}
+""", dry)
+
+
+def r_btop(t: Theme, dry: bool) -> None:
+    """
+    btop reads themes from ~/.config/btop/themes; btop.conf names one via
+    color_theme, so it stays hand-editable. The *_start/_mid/_end triples are
+    gradient stops, which is why the graphs get three colours each.
+    """
+    k = t.term
+    pairs = {
+        "main_bg":      "" if t.opacity.get("terminal", 1.0) != 1.0 else t.hex("bg"),
+        "main_fg":      t.hex("fg"),
+        "title":        t.extra.get("cursor", t.hex("fg")),
+        "hi_fg":        t.hex("accent"),
+        "selected_bg":  t.hex("bg_selected"),
+        "selected_fg":  t.hex("accent"),
+        "inactive_fg":  t.hex("fg_disabled"),
+        "graph_text":   t.hex("fg_muted"),
+        "meter_bg":     t.hex("bg_raised"),
+        "proc_misc":    k["bright_cyan"],
+        "cpu_box":      t.hex("outline"),
+        "mem_box":      t.hex("outline"),
+        "net_box":      t.hex("outline"),
+        "proc_box":     t.hex("outline"),
+        "div_line":     t.hex("outline"),
+    }
+    grads = {
+        "temp":      (k["cyan"], t.hex("warning"), t.hex("error")),
+        "cpu":       (t.hex("success"), t.hex("warning"), t.hex("error")),
+        "free":      (t.hex("success"), k["bright_green"], k["green"]),
+        "cached":    (k["cyan"], k["bright_cyan"], k["blue"]),
+        "available": (t.hex("warning"), k["bright_yellow"], k["yellow"]),
+        "used":      (t.hex("error"), k["bright_red"], k["red"]),
+        "download":  (k["cyan"], k["bright_cyan"], k["blue"]),
+        "upload":    (t.hex("accent"), k["bright_red"], k["magenta"]),
+        "process":   (t.hex("info"), k["bright_blue"], k["cyan"]),
+    }
+    body = "".join(f'theme[{key}]="{val}"\n' for key, val in pairs.items())
+    body += "\n"
+    for name, (s, m, e) in grads.items():
+        body += (f'theme[{name}_start]="{s}"\n'
+                 f'theme[{name}_mid]="{m}"\n'
+                 f'theme[{name}_end]="{e}"\n')
+    write(CFG / "btop/themes/palette.theme", f"""# {BANNER}
+# Theme: {t.name}
+# main_bg is left empty so btop inherits the terminal's translucent
+# background instead of painting an opaque rectangle over it.
+
+{body}""", dry)
+
+
 def check_breeze_contract(t: Theme) -> list[str]:
     """Every @*_breeze name the installed theme dereferences must be defined."""
     import re
@@ -657,6 +1043,19 @@ def reload_all(t: Theme) -> None:
     results.append(("kitty", run(["kitten", "@", "set-colors", "--all", "--configured",
                                   str(CFG / "kitty/current-theme.conf")])))
 
+    # bat keeps a compiled cache of its themes; without this the new
+    # .tmTheme is on disk but invisible to bat.
+    results.append(("bat", run(["bat", "cache", "--build"])))
+
+    # starship re-reads its config on every prompt, and shell-colors.sh is
+    # picked up by the next shell -- nothing to signal for either.
+    results.append(("starship", True))
+
+    # zellij reads its theme at session start, btop at launch; neither
+    # supports being signalled, so running instances are left alone.
+    results.append(("zellij", True))
+    results.append(("btop", True))
+
     # kdeglobals is written by r_kdeglobals -- deliberately no kwriteconfig6
     # here, which would reformat the file and make the next run non-idempotent.
     # Qt apps read it at launch, so there is nothing to signal.
@@ -696,7 +1095,8 @@ def main() -> None:
 
     for fn in (r_hyprland, r_hyprlock, r_waybar, r_swaync,
                r_fuzzel, r_kitty, r_wezterm, r_wallpaper,
-               r_gtk, r_kde, r_kdeglobals):
+               r_gtk, r_kde, r_kdeglobals,
+               r_starship, r_shell_colors, r_bat, r_zellij, r_btop):
         fn(t, args.dry_run)
 
     verb = "would write" if args.dry_run else "wrote"

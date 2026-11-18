@@ -1,0 +1,10 @@
+# ~/.config/bat/config
+#
+# The "Palette" theme is generated from ~/.config/theme/palette.toml by
+# `theme-apply` into ~/.config/bat/themes/Palette.tmTheme. This file only
+# names it, so it stays hand-editable.
+
+--theme="Palette"
+--style="numbers,changes,header-filename"
+--italic-text=always
+--tabs=4
