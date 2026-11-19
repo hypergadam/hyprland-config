@@ -60,12 +60,12 @@ window#waybar {
 #clock { color: @fg; font-weight: 700; }
 
 /* ── readouts: margin-separated, not boxed ────────────── */
-#cpu, #memory, #temperature, #backlight,
+#cpu, #memory, #temperature, #backlight, #custom-backlight,
 #wireplumber, #network, #bluetooth, #battery {
   color: @bar_value;
   margin: 0 7px;
 }
-#cpu:hover, #memory:hover, #temperature:hover, #backlight:hover,
+#cpu:hover, #memory:hover, #temperature:hover, #backlight:hover, #custom-backlight:hover,
 #wireplumber:hover, #network:hover, #bluetooth:hover, #battery:hover {
   color: @fg;
 }

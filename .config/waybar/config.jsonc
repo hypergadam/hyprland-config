@@ -1,8 +1,8 @@
 // Waybar - omarchy-style flat bar, identical on both outputs.
 // Colours live in colors.css, generated from ~/.config/theme/palette.toml.
 // Module definitions (formats, tooltips, click actions) are unchanged.
-// Hidden modules: backlight. Its definition is
-// kept below -- re-add the name to modules-left/right to restore.
+// Brightness: the laptop bar uses the built-in backlight module on amdgpu_bl1;
+// the desktop bar drives the AOC over DDC/CI via ~/.config/hypr/brightness.sh.
 // mpris is icon-only: a transport button, no track title.
 // wireplumber: compact readout, scroll adjusts, click mutes.
 [
@@ -29,6 +29,7 @@
       "cpu",
       "memory",
       "temperature",
+      "custom/backlight",
       "wireplumber",
       "network",
       "bluetooth",
@@ -132,14 +133,17 @@
       "tooltip-format": "Power: sleep, restart, or shut down",
       "on-click": "sh ~/.config/hypr/power-menu.sh"
     },
-    "backlight": {
-      "device": "amdgpu_bl1",
-      "format": "  {percent}%",
-      "tooltip-format": "Laptop screen brightness: {percent}%\nLeft-click / scroll up: brighter (+5%)\nRight-click / scroll down: dimmer (-5%)",
-      "on-scroll-up": "brightnessctl -d amdgpu_bl1 set +5%",
-      "on-scroll-down": "brightnessctl -d amdgpu_bl1 --min-value=3277 set 5%-",
-      "on-click": "brightnessctl -d amdgpu_bl1 set +5%",
-      "on-click-right": "brightnessctl -d amdgpu_bl1 --min-value=3277 set 5%-"
+    "custom/backlight": {
+      "exec": "sh ~/.config/hypr/brightness.sh get HDMI-A-1",
+      "interval": 30,
+      "signal": 9,
+      "format": "  {}%",
+      "tooltip": true,
+      "tooltip-format": "External monitor brightness over DDC/CI\nLeft-click / scroll up: brighter (+5%)\nRight-click / scroll down: dimmer (-5%)",
+      "on-scroll-up": "sh ~/.config/hypr/brightness.sh on HDMI-A-1 up",
+      "on-scroll-down": "sh ~/.config/hypr/brightness.sh on HDMI-A-1 down",
+      "on-click": "sh ~/.config/hypr/brightness.sh on HDMI-A-1 up",
+      "on-click-right": "sh ~/.config/hypr/brightness.sh on HDMI-A-1 down"
     },
     "custom/launcher": {
       "format": "",
@@ -225,6 +229,7 @@
       "cpu",
       "memory",
       "temperature",
+      "backlight",
       "wireplumber",
       "network",
       "bluetooth",
@@ -332,10 +337,10 @@
       "device": "amdgpu_bl1",
       "format": "  {percent}%",
       "tooltip-format": "Laptop screen brightness: {percent}%\nLeft-click / scroll up: brighter (+5%)\nRight-click / scroll down: dimmer (-5%)",
-      "on-scroll-up": "brightnessctl -d amdgpu_bl1 set +5%",
-      "on-scroll-down": "brightnessctl -d amdgpu_bl1 --min-value=3277 set 5%-",
-      "on-click": "brightnessctl -d amdgpu_bl1 set +5%",
-      "on-click-right": "brightnessctl -d amdgpu_bl1 --min-value=3277 set 5%-"
+      "on-scroll-up": "sh ~/.config/hypr/brightness.sh on eDP-1 up",
+      "on-scroll-down": "sh ~/.config/hypr/brightness.sh on eDP-1 down",
+      "on-click": "sh ~/.config/hypr/brightness.sh on eDP-1 up",
+      "on-click-right": "sh ~/.config/hypr/brightness.sh on eDP-1 down"
     },
     "custom/launcher": {
       "format": "",

@@ -37,7 +37,8 @@ Colour is the exception: never hand-edit a generated `colors.*` file. Edit
   `xdg-desktop-portal-kde` (file dialogs), `plasma-integration` (Qt theming)
 - SwayNotificationCenter (`swaync`), NetworkManager applet and connection editor,
   Blueman
-- WirePlumber (`wpctl`), `kcmshell6 kcm_pulseaudio`, `brightnessctl`, `playerctl`
+- WirePlumber (`wpctl`), `kcmshell6 kcm_pulseaudio`, `brightnessctl`, `ddcutil`
+  (DDC/CI brightness on external monitors), `playerctl`
 - `grim`, `slurp`, `wl-copy`, `notify-send`, `xdg-user-dir`
 - JetBrains Mono, Noto Sans and Symbols Nerd Font Mono (Waybar and terminals)
 - `breeze-gtk` and `breeze-icon-theme` -- the GTK/Qt widget theme is recoloured
@@ -122,9 +123,27 @@ The configuration currently uses `HDMI-A-1` for workspaces 1–5 and `eDP-1`
 for workspaces 6–10. Monitor resolutions, refresh rates, positions, and scales
 are set in `.config/hypr/hyprland.lua`.
 
-Waybar uses battery `BAT0` and laptop backlight `amdgpu_bl1`. Both bars display
-the laptop brightness control. The minimum brightness value is calculated for
-this laptop's backlight. Adjust these settings for another machine.
+Waybar uses battery `BAT0` and laptop backlight `amdgpu_bl1`.
+
+Brightness goes through `.config/hypr/brightness.sh`, which covers both kinds of
+display: the internal panel via `brightnessctl`, and any external monitor that
+answers DDC/CI via `ddcutil` -- `brightnessctl` cannot reach the latter at all.
+Monitors are addressed by connector name, and the I2C bus map is cached in
+`$XDG_RUNTIME_DIR`, re-probed when an unknown connector appears. Every step
+clamps at 5%, so a screen never goes fully dark.
+
+    brightness.sh up|down [step]           # focused monitor, step defaults to 5
+    brightness.sh all up|down|set [arg]    # every display together
+    brightness.sh on <connector> up|...    # one named output
+    brightness.sh get [connector]          # percent, for Waybar
+    brightness.sh rescan                   # re-probe DDC after a hotplug
+
+The `XF86MonBrightness` keys adjust the focused monitor. **Super+Alt+Up/Down**
+does the same from the main keyboard, for laptops whose Fn keys never emit those
+events; adding **Shift** moves every display at once. Each change raises a
+SwayNC popup with a progress bar and signals Waybar (`RTMIN+9`) to refresh.
+
+Adjust the connector names for another machine.
 
 ## Restore
 
@@ -190,9 +209,11 @@ The stylesheet extends `/etc/xdg/swaync/style.css` (SwayNC 0.12.6).
 
 Both bars are now identical -- same height (28), same modules -- so the laptop no
 longer runs a reduced set. Volume shows as `{icon} {volume}%`: scroll to adjust
-in 5% steps, click to mute, right-click for sound settings. The brightness module
-is hidden; its definition remains in `config.jsonc` and can be restored by
-re-adding the name to `modules-right`. MPRIS is an icon-only transport button: it shows a pause
+in 5% steps, click to mute, right-click for sound settings. Brightness sits
+beside it on both bars, each bar reading the display it belongs to: the laptop
+bar the `amdgpu_bl1` backlight, the desktop bar the AOC over DDC/CI. Scroll up
+or left-click to brighten, scroll down or right-click to dim.
+MPRIS is an icon-only transport button: it shows a pause
 glyph while playing, a play glyph when paused, and hides itself when no player is
 running. Click toggles, right-click skips, scroll moves between tracks.
 The application button opens Fuzzel; existing keyboard shortcuts stay the same.

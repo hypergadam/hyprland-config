@@ -23,6 +23,7 @@ set -- \
     hypr/launch-apidog.sh \
     hypr/power-menu.sh \
     hypr/screenshot.sh \
+    hypr/brightness.sh \
     hypr/lock.sh \
     hypr/hypridle.conf \
     \
