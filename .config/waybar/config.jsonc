@@ -50,20 +50,20 @@
     },
     "cpu": {
       "interval": 3,
-      "format": "  {usage}%",
+      "format": "󰻠  {usage}%",
       "tooltip-format": "CPU usage: {usage}%"
     },
     "memory": {
       "interval": 5,
-      "format": "  {percentage}%",
+      "format": "󰍛  {percentage}%",
       "tooltip-format": "{used:.1f} / {total:.1f} GiB used"
     },
     "wireplumber": {
       "format": "{icon} {volume}%",
       "format-icons": [
-        "",
-        "",
-        ""
+        "󰕿",
+        "󰖀",
+        "󰕾"
       ],
       "format-muted": "󰝟",
       "scroll-step": 5,
@@ -82,22 +82,22 @@
       }
     },
     "network": {
-      "format-wifi": "  {signalStrength}%",
-      "format-ethernet": "  Online",
-      "format-linked": "",
-      "format-disconnected": "",
+      "format-wifi": "󰖩  {signalStrength}%",
+      "format-ethernet": "󰈀  Online",
+      "format-linked": "󰈀",
+      "format-disconnected": "󰖪",
       "tooltip-format": "{essid}\n{ifname}: {ipaddr}\nClick: connection manager · Right-click: advanced settings",
       "on-click": "python3 ~/.config/hypr/connections.py",
       "on-click-right": "nm-connection-editor",
       "max-length": 18
     },
     "bluetooth": {
-      "format": "",
+      "format": "󰂯",
       "tooltip-format": "Bluetooth: {status}",
-      "format-connected": "  {num_connections}",
+      "format-connected": "󰂱  {num_connections}",
       "tooltip-format-connected": "{device_enumerate}",
-      "format-disabled": "",
-      "format-off": "",
+      "format-disabled": "󰂲",
+      "format-off": "󰂲",
       "on-click": "blueman-manager"
     },
     "battery": {
@@ -109,18 +109,18 @@
       },
       "format": "{icon}  {capacity}%",
       "format-icons": [
-        "",
-        "",
-        "",
-        "",
-        ""
+        "󰁺",
+        "󰁼",
+        "󰁾",
+        "󰂀",
+        "󰁹"
       ],
-      "format-charging": "  {capacity}%",
-      "format-full": "  {capacity}%",
+      "format-charging": "󰂄  {capacity}%",
+      "format-full": "󰁹  {capacity}%",
       "tooltip-format": "{capacity}% · {timeTo}"
     },
     "custom/notifications": {
-      "format": "",
+      "format": "󰂚",
       "tooltip-format": "Click to open notifications · Super+N",
       "on-click": "swaync-client -t"
     },
@@ -129,7 +129,7 @@
       "spacing": 10
     },
     "custom/power": {
-      "format": "",
+      "format": "󰐥",
       "tooltip-format": "Power: sleep, restart, or shut down",
       "on-click": "sh ~/.config/hypr/power-menu.sh"
     },
@@ -137,7 +137,7 @@
       "exec": "sh ~/.config/hypr/brightness.sh get HDMI-A-1",
       "interval": 30,
       "signal": 9,
-      "format": "  {}%",
+      "format": "󰃠  {}%",
       "tooltip": true,
       "tooltip-format": "External monitor brightness over DDC/CI\nLeft-click / scroll up: brighter (+5%)\nRight-click / scroll down: dimmer (-5%)",
       "on-scroll-up": "sh ~/.config/hypr/brightness.sh on HDMI-A-1 up",
@@ -155,9 +155,9 @@
       "format-paused": "{status_icon}",
       "format-stopped": "",
       "status-icons": {
-        "playing": "",
-        "paused": "",
-        "stopped": ""
+        "playing": "󰏤",
+        "paused": "󰐊",
+        "stopped": "󰐊"
       },
       "tooltip-format": "{title}\n{artist}\nClick: play/pause · Right-click: next · Scroll: prev/next",
       "on-click": "playerctl play-pause",
@@ -170,7 +170,7 @@
       "hwmon-path-abs": "/sys/devices/pci0000:00/0000:00:18.3/hwmon",
       "input-filename": "temp1_input",
       "interval": 5,
-      "format": "  {temperatureC}°C",
+      "format": "󰔏  {temperatureC}°C",
       "tooltip-format": "CPU temperature (AMD Tctl): {temperatureC}°C",
       "warning-threshold": 80,
       "critical-threshold": 95
@@ -250,20 +250,20 @@
     },
     "cpu": {
       "interval": 3,
-      "format": "  {usage}%",
+      "format": "󰻠  {usage}%",
       "tooltip-format": "CPU usage: {usage}%"
     },
     "memory": {
       "interval": 5,
-      "format": "  {percentage}%",
+      "format": "󰍛  {percentage}%",
       "tooltip-format": "{used:.1f} / {total:.1f} GiB used"
     },
     "wireplumber": {
       "format": "{icon} {volume}%",
       "format-icons": [
-        "",
-        "",
-        ""
+        "󰕿",
+        "󰖀",
+        "󰕾"
       ],
       "format-muted": "󰝟",
       "scroll-step": 5,
@@ -282,22 +282,22 @@
       }
     },
     "network": {
-      "format-wifi": "  {signalStrength}%",
-      "format-ethernet": "  Online",
-      "format-linked": "",
-      "format-disconnected": "",
+      "format-wifi": "󰖩  {signalStrength}%",
+      "format-ethernet": "󰈀  Online",
+      "format-linked": "󰈀",
+      "format-disconnected": "󰖪",
       "tooltip-format": "{essid}\n{ifname}: {ipaddr}\nClick: connection manager · Right-click: advanced settings",
       "on-click": "python3 ~/.config/hypr/connections.py",
       "on-click-right": "nm-connection-editor",
       "max-length": 18
     },
     "bluetooth": {
-      "format": "",
+      "format": "󰂯",
       "tooltip-format": "Bluetooth: {status}",
-      "format-connected": "  {num_connections}",
+      "format-connected": "󰂱  {num_connections}",
       "tooltip-format-connected": "{device_enumerate}",
-      "format-disabled": "",
-      "format-off": "",
+      "format-disabled": "󰂲",
+      "format-off": "󰂲",
       "on-click": "blueman-manager"
     },
     "battery": {
@@ -309,18 +309,18 @@
       },
       "format": "{icon}  {capacity}%",
       "format-icons": [
-        "",
-        "",
-        "",
-        "",
-        ""
+        "󰁺",
+        "󰁼",
+        "󰁾",
+        "󰂀",
+        "󰁹"
       ],
-      "format-charging": "  {capacity}%",
-      "format-full": "  {capacity}%",
+      "format-charging": "󰂄  {capacity}%",
+      "format-full": "󰁹  {capacity}%",
       "tooltip-format": "{capacity}% · {timeTo}"
     },
     "custom/notifications": {
-      "format": "",
+      "format": "󰂚",
       "tooltip-format": "Click to open notifications · Super+N",
       "on-click": "swaync-client -t"
     },
@@ -329,13 +329,13 @@
       "spacing": 10
     },
     "custom/power": {
-      "format": "",
+      "format": "󰐥",
       "tooltip-format": "Power: sleep, restart, or shut down",
       "on-click": "sh ~/.config/hypr/power-menu.sh"
     },
     "backlight": {
       "device": "amdgpu_bl1",
-      "format": "  {percent}%",
+      "format": "󰃠  {percent}%",
       "tooltip-format": "Laptop screen brightness: {percent}%\nLeft-click / scroll up: brighter (+5%)\nRight-click / scroll down: dimmer (-5%)",
       "on-scroll-up": "sh ~/.config/hypr/brightness.sh on eDP-1 up",
       "on-scroll-down": "sh ~/.config/hypr/brightness.sh on eDP-1 down",
@@ -352,9 +352,9 @@
       "format-paused": "{status_icon}",
       "format-stopped": "",
       "status-icons": {
-        "playing": "",
-        "paused": "",
-        "stopped": ""
+        "playing": "󰏤",
+        "paused": "󰐊",
+        "stopped": "󰐊"
       },
       "tooltip-format": "{title}\n{artist}\nClick: play/pause · Right-click: next · Scroll: prev/next",
       "on-click": "playerctl play-pause",
@@ -367,7 +367,7 @@
       "hwmon-path-abs": "/sys/devices/pci0000:00/0000:00:18.3/hwmon",
       "input-filename": "temp1_input",
       "interval": 5,
-      "format": "  {temperatureC}°C",
+      "format": "󰔏  {temperatureC}°C",
       "tooltip-format": "CPU temperature (AMD Tctl): {temperatureC}°C",
       "warning-threshold": 80,
       "critical-threshold": 95

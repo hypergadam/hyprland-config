@@ -32,6 +32,8 @@ set -- \
     theme/palette-akane.toml \
     theme/palette-kanagawa.toml \
     theme/palette-catppuccin-mocha.toml \
+    theme/palette-solitude.toml \
+    theme/palette-aetheria.toml \
     theme/theme-apply \
     theme/README.md \
     \
@@ -85,6 +87,8 @@ set -- \
     hypr/wallpapers/2-akane.jpg \
     hypr/wallpapers/4-akane.jpg \
     hypr/wallpapers/arc-blueberry-2.png \
+    hypr/wallpapers/solitude-on-pole.jpg \
+    hypr/wallpapers/aetheria-1-4k.jpg \
     \
     `# ---- systemd user units ----` \
     systemd/user/hypr-wallpaper.service \

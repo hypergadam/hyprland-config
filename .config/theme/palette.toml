@@ -14,49 +14,57 @@
 # so any palette works as long as the three mapping blocks are filled in.
 # ============================================================================
 
-name = "Akane"
-wallpaper = "arc-blueberry-2.png"
+name = "Solitude"
+wallpaper = "solitude-on-pole.jpg"   # upstream BG1, "On Pole"
 
-# --- Akane (茜) -- madder red. Palette verbatim from the upstream theme:
-# github.com/Grenish/omarchy-akane-theme @ bfe2285 (colors.toml)
-# "vermillion torii and maple, sunset gold, pine moss, lake teal, dusk navy"
+# --- Solitude -- near-black, neutral. Palette verbatim from the upstream
+# theme: github.com/HANCORE-linux/omarchy-solitude-theme (colors.toml)
+# "a near-black ground, one cool grey accent, and a single warm ember"
 [palette]
-accent             = "#e15a48"   # madder / vermillion -- the torii
-selection          = "#2c2438"
-muted              = "#6d5a68"
+accent             = "#798186"   # the one neutral accent
+border_bright      = "#a8adb0"   # upstream active_border_color
+selection          = "#2c2c2d"
+muted              = "#7f7f7f"
 
-background         = "#12101c"   # dusk navy
-dark_background    = "#0c0a14"
-darker_background  = "#08070e"
-lighter_background = "#221c2c"
+background         = "#101315"
+dark_background    = "#0c0e10"
+darker_background  = "#080a0b"
+lighter_background = "#212121"
+inactive_border    = "#1e1e1e"   # upstream col.inactive_border
 
-foreground         = "#f0c4a8"   # sunset glow -- warm, not grey
-dark_foreground    = "#8a6e6c"
-light_foreground   = "#f3d0b8"
-bright_foreground  = "#f7e0cc"
+foreground         = "#cacccc"
+dark_foreground    = "#949494"
+light_foreground   = "#d5d5d5"
+bright_foreground  = "#a5aeb4"
 
-red                = "#d6453d"
-yellow             = "#f0b45a"   # sunset gold
-orange             = "#e87a42"
-green              = "#7e9a6a"   # pine moss
-cyan               = "#4a9bb0"   # lake teal
-blue               = "#5b7fa8"
-magenta            = "#c45c78"
-brown              = "#6b3a2a"
+red                = "#565d60"
+yellow             = "#d9dbdc"
+orange             = "#d87c4a"
+green              = "#9fa5a9"
+cyan               = "#707070"
+blue               = "#798186"
+magenta            = "#aeaeae"
+brown              = "#9d7e6f"
 
-bright_red         = "#f06a58"
-bright_yellow      = "#f6cc7a"
-bright_green       = "#9ab57e"
-bright_cyan        = "#7ec4d2"
-bright_blue        = "#7a9cc4"
-bright_magenta     = "#e07a94"
+bright_red         = "#de6145"   # the ember -- the only saturated colour
+bright_yellow      = "#c9c2b4"
+bright_green       = "#343d41"
+bright_cyan        = "#707070"
+bright_blue        = "#5d6367"
+bright_magenta     = "#9a9a9a"
+
+# ANSI slots 7 and 8 are their own values upstream, not aliases of the
+# foreground/muted pair -- kept separate so the 16 slots stay verbatim.
+ansi_white         = "#cbc2be"
+ansi_bright_black  = "#4b4e55"
 
 # --- Semantic UI roles ------------------------------------------------------
-# Upstream sets the active border to accent -> yellow at 45deg; accent_dim
-# is what closes that gradient, so this reproduces it exactly.
+# Upstream's active border runs background -> accent at 90deg. Rendered here
+# as the two-stop gradient this config uses, closing on upstream's own
+# active_border_color so the edge stays legible against a near-black desktop.
 [roles]
 accent           = "accent"              # borders, active workspace, launcher
-accent_dim       = "yellow"              # second stop of the border gradient
+accent_dim       = "border_bright"       # second gradient stop; hover states
 accent_text      = "darker_background"   # text drawn ON an accent fill
 
 bg               = "background"
@@ -69,42 +77,46 @@ fg               = "foreground"
 fg_muted         = "dark_foreground"
 fg_disabled      = "muted"
 outline          = "lighter_background"
-outline_inactive = "selection"           # upstream inactive border
+outline_inactive = "inactive_border"     # upstream inactive border
 
-error            = "red"
-warning          = "yellow"
+# Solitude desaturates its ANSI red to a grey (#565d60), which is unreadable
+# as a UI alert. The status roles use the theme's one warm colour instead;
+# the terminal block below keeps the ANSI slot verbatim.
+error            = "bright_red"
+warning          = "bright_yellow"
 success          = "green"
 info             = "blue"
 
-# --- Terminal: the 16 ANSI slots (verbatim from upstream alacritty.toml) ----
+# --- Terminal: the 16 ANSI slots (verbatim from upstream colors.toml) -------
 [terminal]
-black          = "background"
-red            = "red"
-green          = "green"
-yellow         = "yellow"
-blue           = "blue"
-magenta        = "magenta"
-cyan           = "cyan"
-white          = "foreground"
-bright_black   = "muted"
-bright_red     = "bright_red"
-bright_green   = "bright_green"
-bright_yellow  = "bright_yellow"
-bright_blue    = "bright_blue"
-bright_magenta = "bright_magenta"
-bright_cyan    = "bright_cyan"
-bright_white   = "bright_foreground"
+black          = "background"         # color0
+red            = "red"                # color1
+green          = "green"              # color2
+yellow         = "yellow"             # color3
+blue           = "blue"               # color4
+magenta        = "magenta"            # color5
+cyan           = "cyan"               # color6
+white          = "ansi_white"         # color7
+bright_black   = "ansi_bright_black"  # color8
+bright_red     = "bright_red"         # color9
+bright_green   = "bright_green"       # color10
+bright_yellow  = "bright_yellow"      # color11
+bright_blue    = "bright_blue"        # color12
+bright_magenta = "bright_magenta"     # color13
+bright_cyan    = "bright_cyan"        # color14
+bright_white   = "bright_foreground"  # color15
 
 # --- Everything else --------------------------------------------------------
 [extra]
-cursor       = "bright_foreground"   # upstream alacritty cursor
+cursor       = "foreground"   # upstream cursor = #cacccc
 link_visited = "magenta"
 
 # --- Per-surface opacity ----------------------------------------------------
-# ee / aa reproduce upstream's rgba(e15a48ee) and rgba(2c2438aa) exactly.
+# ee reproduces upstream's rgba(798186ee); the inactive border is an opaque
+# rgb(1e1e1e) upstream, so it takes ff.
 [opacity]
 border_active   = "ee"
-border_inactive = "aa"
+border_inactive = "ff"
 panel           = "f2"
 launcher        = "fa"
 terminal        = 0.95

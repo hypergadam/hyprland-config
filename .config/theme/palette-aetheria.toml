@@ -1,0 +1,132 @@
+# ============================================================================
+# Single source of truth for desktop colour.
+#
+# Nothing else should contain a raw hex value. Edit this file, run
+# `theme-apply`, and every component is regenerated.
+#
+#   palette   the raw named colours of the theme. Swap this block (and the
+#             three mapping blocks below) to change theme wholesale.
+#   roles     semantic UI names -> palette keys
+#   terminal  the 16 ANSI slots -> palette keys
+#   extra     odds and ends that aren't surfaces
+#
+# Renderers only ever read roles/terminal/extra, never palette keys directly,
+# so any palette works as long as the three mapping blocks are filled in.
+# ============================================================================
+
+name = "Aetheria"
+wallpaper = "aetheria-1-4k.jpg"   # upstream backgrounds/aetheria-1-4k@.jpg
+
+# --- Aetheria -- deep indigo night, teal text, crimson/lime accents.
+# Palette from the upstream theme: github.com/JJDizz1L/aetheria
+# (colors.toml, hyprland.conf, hyprlock.conf, mako.ini, walker.css)
+# "nebula over a dark valley -- indigo ground, aurora teal, a crimson edge"
+[palette]
+accent             = "#e20342"   # first stop of upstream's active border
+accent_lime        = "#c8e967"   # second stop -- closes the 45deg gradient
+rose               = "#be3f50"   # upstream's declared `accent` / GTK accent_bg
+crimson            = "#a60234"   # upstream mako + walker border colour
+
+background         = "#0e091d"   # upstream background
+dark_background    = "#0b0716"   # derived: one step under the ground
+darker_background  = "#070410"   # derived: deepest well
+lighter_background = "#1a0f2b"   # derived: lifted surface (cards, menus)
+hyprlock_inner     = "#13091d"   # upstream hyprlock $inner_color
+selection          = "#2a153c"   # upstream col.inactive_border, reused as fill
+inactive_border    = "#2a153c"   # upstream col.inactive_border
+
+foreground         = "#14b9b5"   # upstream foreground -- aurora teal
+dark_foreground    = "#0e827f"   # derived: teal at 70%
+muted              = "#0a5d5b"   # derived: teal at 50%
+light_foreground   = "#11aeb3"   # upstream color15
+bright_foreground  = "#5ee0dd"   # derived: teal lifted, for peak contrast
+
+orange             = "#ff7f41"   # upstream cursor
+amber              = "#ffbe74"
+mint               = "#7cd699"
+vivid_red          = "#f93d3b"
+sky                = "#04c5f0"
+violet             = "#9147a8"
+
+# The 16 ANSI slots upstream ships are deliberately scrambled relative to
+# their names (the "red" slot holds lime, "green" holds crimson, "white"
+# holds a dark maroon). They are kept verbatim below; the UI roles above
+# do not read them, so the desktop stays legible either way.
+ansi_black         = "#000000"
+ansi_red           = "#c8e967"
+ansi_green         = "#e20342"
+ansi_yellow        = "#7cd699"
+ansi_blue          = "#be3f50"
+ansi_magenta       = "#9147a8"
+ansi_cyan          = "#ff7f41"
+ansi_white         = "#a60234"
+ansi_bright_black  = "#c53253"
+ansi_bright_red    = "#ce4f48"
+ansi_bright_green  = "#f93d3b"
+ansi_bright_yellow = "#fd3e6a"
+ansi_bright_blue   = "#04c5f0"
+ansi_bright_magenta= "#6c032c"
+ansi_bright_cyan   = "#ffbe74"
+ansi_bright_white  = "#11aeb3"
+
+# --- Semantic UI roles ------------------------------------------------------
+# Upstream's active border is `rgb(e20342) rgb(c8e967) 45deg`. This config
+# renders the border as {accent, accent_dim} at 45deg, so these two keys
+# reproduce it exactly.
+[roles]
+accent           = "accent"              # borders, active workspace, launcher
+accent_dim       = "accent_lime"         # second gradient stop; hover states
+accent_text      = "background"          # upstream GTK accent_fg_color
+
+bg               = "background"
+bg_dim           = "dark_background"
+bg_deep          = "darker_background"
+bg_raised        = "lighter_background"
+bg_selected      = "selection"
+
+fg               = "foreground"
+fg_muted         = "dark_foreground"
+fg_disabled      = "muted"
+outline          = "lighter_background"
+outline_inactive = "inactive_border"     # upstream inactive border
+
+# Upstream maps "destructive" to its lime ANSI-red slot, which does not read
+# as danger. The status roles use the theme's true signal colours instead;
+# the terminal block below keeps every ANSI slot verbatim.
+error            = "vivid_red"
+warning          = "amber"
+success          = "mint"
+info             = "sky"
+
+# --- Terminal: the 16 ANSI slots (verbatim from upstream colors.toml) -------
+[terminal]
+black          = "ansi_black"          # color0
+red            = "ansi_red"            # color1
+green          = "ansi_green"          # color2
+yellow         = "ansi_yellow"         # color3
+blue           = "ansi_blue"           # color4
+magenta        = "ansi_magenta"        # color5
+cyan           = "ansi_cyan"           # color6
+white          = "ansi_white"          # color7
+bright_black   = "ansi_bright_black"   # color8
+bright_red     = "ansi_bright_red"     # color9
+bright_green   = "ansi_bright_green"   # color10
+bright_yellow  = "ansi_bright_yellow"  # color11
+bright_blue    = "ansi_bright_blue"    # color12
+bright_magenta = "ansi_bright_magenta" # color13
+bright_cyan    = "ansi_bright_cyan"    # color14
+bright_white   = "ansi_bright_white"   # color15
+
+# --- Everything else --------------------------------------------------------
+[extra]
+cursor       = "orange"   # upstream cursor = #ff7f41
+link_visited = "violet"
+
+# --- Per-surface opacity ----------------------------------------------------
+# Upstream states both borders with rgb(), i.e. fully opaque.
+[opacity]
+border_active   = "ff"
+border_inactive = "ff"
+panel           = "f2"
+launcher        = "fa"
+terminal        = 0.95

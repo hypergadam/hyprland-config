@@ -2,7 +2,9 @@
  * Colours come from ~/.config/theme/palette.toml via `theme-apply`.
  * Omarchy's language: no pills, no radius, solid ground, separation by
  * margin. The solid background is deliberate -- a transparent bar over a
- * bright wallpaper is what washed the old pills out. */
+ * bright wallpaper is what washed the old pills out.
+ * Icons are the Material Design (nf-md) set: one optical weight and width
+ * across every module, which Solitude's flat greys depend on to stay even. */
 @import url("colors.css");
 
 * {
@@ -27,7 +29,7 @@ window#waybar {
 /* ── launcher ─────────────────────────────────────────── */
 #custom-launcher {
   color: @accent;
-  font-size: 15px;
+  font-size: 14px;
   margin: 0 12px 0 4px;
 }
 #custom-launcher:hover { color: @accent_dim; }
@@ -50,7 +52,7 @@ window#waybar {
   color: @accent;
   margin: 0 10px;
   padding: 0 4px;
-  font-size: 13px;
+  font-size: 14px;
 }
 #mpris.paused  { color: @bar_idle; }
 #mpris.stopped { color: @bar_idle; }
