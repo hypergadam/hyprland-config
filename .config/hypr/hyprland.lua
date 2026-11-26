@@ -46,6 +46,11 @@ hl.monitor({
     mode     = "1920x1080@100",
     position = "-1920x0",
     scale    = 1,
+
+    -- This is the only VRR-capable output here (eDP-1 reports vrrCapable: no).
+    -- 2 = fullscreen only, deliberately not 1: always-on VRR makes some panels
+    -- flicker on a static desktop as the refresh rate chases redraw activity.
+    vrr      = 2,
 })
 
 -- Automatic configuration for any other connected display.
@@ -212,7 +217,6 @@ hl.curve("easy",           { type = "spring", mass = 1, stiffness = 238.1191, da
 hl.animation({ leaf = "global",        enabled = true,  speed = 10,   bezier = "default" })
 hl.animation({ leaf = "border",        enabled = true,  speed = 5.39, bezier = "easeOutQuint" })
 hl.animation({ leaf = "windows",       enabled = true,  speed = 4.79, spring = "easy" })
-hl.animation({ leaf = "windowsIn",     enabled = true,  speed = 4.1,  spring = "easy",         style = "popin 87%" })
 hl.animation({ leaf = "windowsOut",    enabled = true,  speed = 1.49, bezier = "linear",       style = "popin 87%" })
 hl.animation({ leaf = "fadeIn",        enabled = true,  speed = 1.73, bezier = "almostLinear" })
 hl.animation({ leaf = "fadeOut",       enabled = true,  speed = 1.46, bezier = "almostLinear" })
@@ -222,12 +226,12 @@ hl.animation({ leaf = "layersIn",      enabled = true,  speed = 4,    bezier = "
 hl.animation({ leaf = "layersOut",     enabled = true,  speed = 1.5,  bezier = "linear",       style = "fade" })
 hl.animation({ leaf = "fadeLayersIn",  enabled = true,  speed = 1.79, bezier = "almostLinear" })
 hl.animation({ leaf = "fadeLayersOut", enabled = true,  speed = 1.39, bezier = "almostLinear" })
-hl.animation({ leaf = "workspaces",    enabled = true,  speed = 1.94, bezier = "almostLinear", style = "fade" })
-hl.animation({ leaf = "workspacesIn",  enabled = true,  speed = 1.21, bezier = "almostLinear", style = "fade" })
-hl.animation({ leaf = "workspacesOut", enabled = true,  speed = 1.94, bezier = "almostLinear", style = "fade" })
 hl.animation({ leaf = "zoomFactor",    enabled = true,  speed = 7,    bezier = "quick" })
 
 -- Material motion: gentle entry and lateral workspace transitions.
+-- windowsIn and the three workspace leaves are declared ONLY here -- the
+-- default block above deliberately leaves them alone, so each leaf has a
+-- single definition and the file reads the way it behaves.
 hl.curve("materialDecel", { type = "bezier", points = { {0.05, 0.7}, {0.1, 1} } })
 hl.curve("materialStandard", { type = "bezier", points = { {0.2, 0}, {0, 1} } })
 hl.animation({ leaf = "windowsIn", enabled = true, speed = 4, bezier = "materialDecel", style = "popin 94%" })
@@ -270,19 +274,9 @@ hl.config({
     },
 })
 
--- See https://wiki.hypr.land/configuring/layouts/master-layout/ for more
-hl.config({
-    master = {
-        new_status = "master",
-    },
-})
-
--- See https://wiki.hypr.land/configuring/layouts/scrolling-layout/ for more
-hl.config({
-    scrolling = {
-        fullscreen_on_one_column = true,
-    },
-})
+-- master and scrolling are not configured: general.layout is "dwindle", and the
+-- upstream example blocks only restated those layouts' own defaults.
+-- See https://wiki.hypr.land/configuring/layouts/ if you switch layouts.
 
 ----------------
 ----  MISC  ----
@@ -292,6 +286,25 @@ hl.config({
     misc = {
         force_default_wallpaper = -1,    -- Set to 0 or 1 to disable the anime mascot wallpapers
         disable_hyprland_logo   = true, -- If true disables the random hyprland logo / anime girl background. :(
+
+        -- Honour xdg-activation: clicking a link in the terminal or a chat app
+        -- raises the browser instead of silently marking it urgent.
+        focus_on_activate       = true,
+    },
+})
+
+-- eDP-1 runs at scale 1.2, and without this XWayland clients render at 1x and
+-- get bitmap-upscaled by the compositor -- that is the blur on XWayland apps
+-- (JetBrains Toolbox among them, see its window rule below).
+--
+-- The trade-off: XWayland surfaces are now handed the real pixel scale and are
+-- sharp, but a toolkit that ignores it draws ~83% size on the laptop panel.
+-- Compensate per-app if one reads small (JetBrains: -Dsun.java2d.uiScale=1.2 in
+-- its own vmoptions) rather than setting GDK_SCALE/QT_SCALE_FACTOR globally,
+-- which would double-scale every native Wayland client.
+hl.config({
+    xwayland = {
+        force_zero_scaling = true,
     },
 })
 
@@ -324,12 +337,9 @@ hl.gesture({
     action = "workspace"
 })
 
--- Example per-device config
--- See https://wiki.hypr.land/configuring/core/devices/ for more
-hl.device({
-    name        = "epic-mouse-v1",
-    sensitivity = -0.5,
-})
+-- Per-device config, should one ever be needed:
+-- See https://wiki.hypr.land/configuring/core/devices/
+-- hl.device({ name = "some-device", sensitivity = -0.5 })
 
 
 ---------------------
@@ -344,6 +354,9 @@ hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("blueman-manager"))
 -- loginctl so Super+L, suspend and idle all lock the same way.
 hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("sh ~/.config/hypr/lock.sh"))
 hl.bind(mainMod .. " + SHIFT + N", hl.dsp.exec_cmd("python3 ~/.config/hypr/connections.py"))
+-- Clipboard history, served by the `wl-paste --watch cliphist store`
+-- watcher started in start-panel.sh. SUPER+V is already float-toggle.
+hl.bind(mainMod .. " + SHIFT + V", hl.dsp.exec_cmd("cliphist list | fuzzel --dmenu --prompt 'Clipboard: ' | cliphist decode | wl-copy"))
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen({ mode = "fullscreen", action = "toggle" }))
 hl.bind("Print", hl.dsp.exec_cmd("sh ~/.config/hypr/screenshot.sh region"))
 hl.bind("SHIFT + Print", hl.dsp.exec_cmd("sh ~/.config/hypr/screenshot.sh full"))
@@ -352,7 +365,11 @@ hl.bind("SHIFT + Print", hl.dsp.exec_cmd("sh ~/.config/hypr/screenshot.sh full")
 hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd(terminal))
 local closeWindowBind = hl.bind(mainMod .. " + C", hl.dsp.window.close())
 -- closeWindowBind:set_enabled(false)
-hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
+-- Power menu, not a bare exit: power-menu.sh offers sleep/restart/shut down
+-- and confirms the destructive two. The old bind called `hyprshutdown`,
+-- which is not installed here, so it always hit its fallback and killed
+-- the session on a single keypress.
+hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("sh ~/.config/hypr/power-menu.sh"))
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + space", hl.dsp.exec_cmd(menu))
@@ -364,6 +381,14 @@ hl.bind(mainMod .. " + left",  hl.dsp.focus({ direction = "left" }))
 hl.bind(mainMod .. " + right", hl.dsp.focus({ direction = "right" }))
 hl.bind(mainMod .. " + up",    hl.dsp.focus({ direction = "up" }))
 hl.bind(mainMod .. " + down",  hl.dsp.focus({ direction = "down" }))
+
+-- Resize the active window. relative = true makes x/y a delta; without it the
+-- dispatcher reads them as an absolute size and errors with "Invalid size".
+local resizeStep = 60
+hl.bind(mainMod .. " + SHIFT + left",  hl.dsp.window.resize({ x = -resizeStep, y = 0, relative = true }), { repeating = true })
+hl.bind(mainMod .. " + SHIFT + right", hl.dsp.window.resize({ x =  resizeStep, y = 0, relative = true }), { repeating = true })
+hl.bind(mainMod .. " + SHIFT + up",    hl.dsp.window.resize({ x = 0, y = -resizeStep, relative = true }), { repeating = true })
+hl.bind(mainMod .. " + SHIFT + down",  hl.dsp.window.resize({ x = 0, y =  resizeStep, relative = true }), { repeating = true })
 
 -- Switch workspaces with mainMod + [0-9]
 -- Move active window to a workspace with mainMod + SHIFT + [0-9]
@@ -401,6 +426,13 @@ hl.bind(mainMod .. " + ALT + up",           hl.dsp.exec_cmd(brightness .. "up"),
 hl.bind(mainMod .. " + ALT + down",         hl.dsp.exec_cmd(brightness .. "down"),     { repeating = true })
 hl.bind(mainMod .. " + ALT + SHIFT + up",   hl.dsp.exec_cmd(brightness .. "all up"),   { repeating = true })
 hl.bind(mainMod .. " + ALT + SHIFT + down", hl.dsp.exec_cmd(brightness .. "all down"), { repeating = true })
+
+-- Lid switch. "on" is the lid CLOSING, "off" is it opening. locked = true so
+-- these still fire with hyprlock up, which is the usual way the lid gets shut.
+-- lid.sh no-ops when undocked so logind's suspend-on-lid-close stays in charge.
+local lid = "sh ~/.config/hypr/lid.sh "
+hl.bind("switch:on:Lid Switch",  hl.dsp.exec_cmd(lid .. "close"), { locked = true })
+hl.bind("switch:off:Lid Switch", hl.dsp.exec_cmd(lid .. "open"),  { locked = true })
 
 -- Requires playerctl
 hl.bind("XF86AudioNext",  hl.dsp.exec_cmd("playerctl next"),       { locked = true })

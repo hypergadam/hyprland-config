@@ -30,6 +30,17 @@ start_waybar() (
 ) 9>"$panel_state/waybar-supervisor.lock"
 
 start_panel_app swaync
+
+# Clipboard-history watcher backing SUPER+SHIFT+V. start_panel_app's pgrep -x
+# guard matches on "wl-paste", so this starts at most one watcher per session
+# even across config reloads. Gated on cliphist separately: start_panel_app only
+# checks its first argument, and a watcher whose store command is missing would
+# spew an error on every single clipboard change.
+if command -v cliphist >/dev/null 2>&1; then
+    start_panel_app wl-paste --watch cliphist store
+else
+    printf 'Missing program: cliphist (clipboard history disabled)\n' >&2
+fi
 # The user service keeps the wallpaper alive independently of the launcher shell.
 systemctl --user start hypr-wallpaper.service
 python3 "$HOME/.config/waybar/workspace-status.py" --init >>"$panel_state/workspaces.log" 2>&1

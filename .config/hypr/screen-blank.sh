@@ -27,6 +27,21 @@ case "${1:-}" in
 off)
     # Blank only while the lock screen is actually up, so an idle but
     # unlocked desktop never goes dark on you mid-read.
+    #
+    # "off wait" additionally waits a few seconds for hyprlock to appear, for
+    # the caller that locks and blanks in one breath (the idle auto-lock
+    # listener). `loginctl lock-session` returns before hyprlock has mapped,
+    # so an unguarded check there would always lose the race and never blank.
+    # The plain "off" path must NOT wait: it runs on every 3s of idle, and
+    # lingering there would leave a sleeping process behind constantly.
+    if [ "${2:-}" = "wait" ]; then
+        i=0
+        while [ "$i" -lt 10 ]; do
+            pidof hyprlock >/dev/null 2>&1 && break
+            sleep 0.5
+            i=$((i + 1))
+        done
+    fi
     pidof hyprlock >/dev/null 2>&1 || exit 0
     : > "$FLAG"
     dpms off
@@ -53,7 +68,7 @@ on)
     done
     ;;
 *)
-    echo "usage: ${0##*/} off|on" >&2
+    echo "usage: ${0##*/} off [wait]|on" >&2
     exit 2
     ;;
 esac

@@ -25,6 +25,8 @@ set -- \
     hypr/screenshot.sh \
     hypr/brightness.sh \
     hypr/lock.sh \
+    hypr/screen-blank.sh \
+    hypr/lid.sh \
     hypr/hypridle.conf \
     \
     `# ---- theme system (SOURCE of truth) ----` \
