@@ -49,7 +49,7 @@
       ]
     },
     "cpu": {
-      "interval": 3,
+      "interval": 5,
       "format": "󰻠  {usage}%",
       "tooltip-format": "CPU usage: {usage}%"
     },
@@ -135,7 +135,6 @@
     },
     "custom/backlight": {
       "exec": "sh ~/.config/hypr/brightness.sh get HDMI-A-1",
-      "interval": 30,
       "signal": 9,
       "format": "󰃠  {}%",
       "tooltip": true,
@@ -163,13 +162,12 @@
       "on-click": "playerctl play-pause",
       "on-click-right": "playerctl next",
       "on-scroll-up": "playerctl next",
-      "on-scroll-down": "playerctl previous",
-      "interval": 1
+      "on-scroll-down": "playerctl previous"
     },
     "temperature": {
       "hwmon-path-abs": "/sys/devices/pci0000:00/0000:00:18.3/hwmon",
       "input-filename": "temp1_input",
-      "interval": 5,
+      "interval": 10,
       "format": "󰔏  {temperatureC}°C",
       "tooltip-format": "CPU temperature (AMD Tctl): {temperatureC}°C",
       "warning-threshold": 80,
@@ -249,7 +247,7 @@
       ]
     },
     "cpu": {
-      "interval": 3,
+      "interval": 5,
       "format": "󰻠  {usage}%",
       "tooltip-format": "CPU usage: {usage}%"
     },
@@ -360,13 +358,12 @@
       "on-click": "playerctl play-pause",
       "on-click-right": "playerctl next",
       "on-scroll-up": "playerctl next",
-      "on-scroll-down": "playerctl previous",
-      "interval": 1
+      "on-scroll-down": "playerctl previous"
     },
     "temperature": {
       "hwmon-path-abs": "/sys/devices/pci0000:00/0000:00:18.3/hwmon",
       "input-filename": "temp1_input",
-      "interval": 5,
+      "interval": 10,
       "format": "󰔏  {temperatureC}°C",
       "tooltip-format": "CPU temperature (AMD Tctl): {temperatureC}°C",
       "warning-threshold": 80,

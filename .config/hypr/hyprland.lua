@@ -308,6 +308,21 @@ hl.config({
     },
 })
 
+-- Direct scanout: hand a fullscreen client's buffer straight to the display
+-- controller and skip composition entirely. Saves GPU work and power for
+-- fullscreen video and games; it was off, and both outputs reported
+-- directScanoutBlockedBy including "USER" -- that USER was this setting.
+--
+-- Worth a look if you ever see a black frame or a flicker when entering or
+-- leaving fullscreen: this is the first thing to set back to 0. It only ever
+-- engages for a single fullscreen, unoccluded surface, so ordinary desktop
+-- use is unaffected either way.
+hl.config({
+    render = {
+        direct_scanout = 1,
+    },
+})
+
 
 ---------------
 ---- INPUT ----
